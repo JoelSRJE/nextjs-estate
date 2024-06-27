@@ -1,5 +1,7 @@
 import { Box, Typography, Button } from "@mui/material";
 import React from "react";
+import Logo from "/public/images/Logo/Logo.png";
+import Image from "next/image";
 
 const Navbar = () => {
   const navOptions = [
@@ -8,15 +10,15 @@ const Navbar = () => {
       text: "Home",
     },
     {
-      link: "/",
-      text: "Available",
+      link: "/Properties",
+      text: "Properties",
     },
     {
-      link: "/",
+      link: "/About",
       text: "About Us",
     },
     {
-      link: "/",
+      link: "/Contact",
       text: "Contact",
     },
   ];
@@ -24,25 +26,41 @@ const Navbar = () => {
   return (
     <Box
       sx={{
+        position: "fixed",
+        top: "0",
+        left: "0",
+        width: "100%",
         display: "flex",
         justifyContent: "space-between",
         padding: "0.5rem 1rem",
         height: "4rem",
-        border: "2px solid gray",
         alignItems: "center",
+        marginTop: "1rem",
+
+        zIndex: "1000",
       }}
     >
-      <Typography>Logo</Typography>
+      <Button
+        href="/"
+        sx={{
+          "&:hover": { backgroundColor: "transparent" },
+        }}
+      >
+        <Image src={Logo} width={100} height={100} />
+      </Button>
 
       <Box sx={{ display: "flex", gap: "0.5rem" }}>
         {navOptions.map((item, idx) => (
           <Button
             key={idx}
+            href={item.link}
             sx={{
               textDecoration: "none",
-              color: "black",
+              color: "#282828",
               gap: "1rem",
-              "&:hover": { backgroundColor: "#282828" },
+              "&:hover": {
+                backgroundColor: "#F1F1F1",
+              },
             }}
           >
             {item.text}
