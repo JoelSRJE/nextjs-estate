@@ -11,6 +11,9 @@ const theme = createTheme({
   typography: {
     fontFamily: josefinSans.style.fontFamily,
   },
+  background: {
+    default: "#17253d",
+  },
 });
 
 export default theme;
