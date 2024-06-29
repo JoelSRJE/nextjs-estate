@@ -1,7 +1,7 @@
 import React from "react";
 import people from "/public/images/Hero/people.png";
 import Image from "next/image";
-import { Box, Typography, Button } from "@mui/material";
+import { Box, Typography, Button, Grid } from "@mui/material";
 import InfoCard from "./infoCard/infoCard";
 
 const InfoSection = () => {
@@ -12,9 +12,18 @@ const InfoSection = () => {
 */
 
   const info = [
-    { amount: "46", text: "Occupants" },
-    { amount: "12", text: "Properties" },
-    { amount: "10", text: "Employees" },
+    {
+      amount: "46",
+      text: "Occupants",
+    },
+    {
+      amount: "12",
+      text: "Properties",
+    },
+    {
+      amount: "10",
+      text: "Employees",
+    },
   ];
 
   const peopleStyle = {
@@ -81,9 +90,13 @@ const InfoSection = () => {
           </Typography>
         </Button>
         <Box>
-          {info.map((item, idx) => (
-            <InfoCard key={idx} itemText={item.text} itemAmount={item.amount} />
-          ))}
+          <Grid sx={{ display: "flex", flexDirection: "row" }}>
+            {info.map((item, idx) => (
+              <Grid item key={idx}>
+                <InfoCard itemText={item.text} itemAmount={item.amount} />
+              </Grid>
+            ))}
+          </Grid>
         </Box>
       </Box>
     </Box>

@@ -1,9 +1,14 @@
-import { Box, Card } from "@mui/material";
+import { Box, Card, Typography } from "@mui/material";
 import React from "react";
 
-const InfoCard = ({ item }) => {
-  console.log(item);
-  return <Card>{item.text}</Card>;
+const InfoCard = ({ itemText, itemAmount }) => {
+  console.log(itemAmount);
+  console.log(itemText);
+  return (
+    <Card>
+      <Typography>{itemText}</Typography>
+    </Card>
+  );
 };
 
 export default InfoCard;
