@@ -1,8 +1,10 @@
+"use client";
 import React from "react";
 import people from "/public/images/Hero/people.png";
 import Image from "next/image";
 import { Box, Typography, Button, Grid } from "@mui/material";
-import InfoCard from "./infoCard/infoCard";
+import { FaHandshake, FaHouse, FaUsers } from "react-icons/fa6";
+import InfoCard from "./infoCard/Infocard";
 
 const InfoSection = () => {
   /*
@@ -13,14 +15,17 @@ const InfoSection = () => {
 
   const info = [
     {
+      icon: <FaHandshake />,
       amount: "46",
       text: "Occupants",
     },
     {
+      icon: <FaHouse />,
       amount: "12",
       text: "Properties",
     },
     {
+      icon: <FaUsers />,
       amount: "10",
       text: "Employees",
     },
@@ -43,6 +48,7 @@ const InfoSection = () => {
         backgroundColor: "#17253d",
         color: "#F1F1F1",
         zIndex: "10",
+        boxShadow: "5",
       }}
     >
       {/* Left side */}
@@ -53,15 +59,33 @@ const InfoSection = () => {
 
       {/* Right side */}
       <Box sx={{ marginTop: "15rem" }}>
-        <Box sx={{ borderBottom: "2px solid #F1F1F1", width: "60%" }}>
-          <Typography sx={{ fontSize: "3rem", fontWeight: "500" }}>
-            Welcome to
-          </Typography>
-          <Typography
-            sx={{ fontSize: "4rem", fontWeight: "600", color: "#add8e6" }}
-          >
-            Tenants AB
-          </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            borderBottom: "2px solid #F1F1F1",
+            width: "60%",
+            gap: "1rem",
+          }}
+        >
+          <Box
+            sx={{
+              width: "1rem",
+              height: "10rem",
+              backgroundColor: "beige",
+              borderRadius: "0.4rem",
+            }}
+          />
+          <Box>
+            <Typography sx={{ fontSize: "3rem", fontWeight: "500" }}>
+              Welcome to
+            </Typography>
+            <Typography
+              sx={{ fontSize: "4rem", fontWeight: "600", color: "#add8e6" }}
+            >
+              Tenants AB
+            </Typography>
+          </Box>
         </Box>
         <Box sx={{ paddingTop: "2rem", paddingBottom: "2rem", width: "60%" }}>
           <Typography sx={{ fontSize: "1.4rem", letterSpacing: "1px" }}>
@@ -77,7 +101,7 @@ const InfoSection = () => {
           href="/about"
           sx={{
             marginTop: "3rem",
-            marginBottom: "3rem",
+            marginBottom: "6rem",
             textTransform: "none",
             padding: "0.5rem 2rem 0.5rem 2rem",
             border: "1px solid #add8e6",
@@ -90,10 +114,14 @@ const InfoSection = () => {
           </Typography>
         </Button>
         <Box>
-          <Grid sx={{ display: "flex", flexDirection: "row" }}>
+          <Grid sx={{ display: "flex", gap: "2rem" }}>
             {info.map((item, idx) => (
               <Grid item key={idx}>
-                <InfoCard itemText={item.text} itemAmount={item.amount} />
+                <InfoCard
+                  itemText={item.text}
+                  itemAmount={item.amount}
+                  itemIcon={item.icon}
+                />
               </Grid>
             ))}
           </Grid>

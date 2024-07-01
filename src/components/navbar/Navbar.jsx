@@ -37,8 +37,8 @@ const Navbar = () => {
         alignItems: "center",
         marginTop: "0rem",
         boxShadow: "5",
-        zIndex: "1000",
-        // backgroundColor: "#17253d",
+        zIndex: "100",
+        backdropFilter: "blur(10px)",
       }}
     >
       <Button

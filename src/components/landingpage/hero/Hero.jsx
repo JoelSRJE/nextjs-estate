@@ -1,21 +1,22 @@
+"use client";
 import React from "react";
 import { Box, Typography, Zoom, Button } from "@mui/material";
 import Image from "next/image";
 import townImg2 from "/public/images/Hero/townImg2.png";
-import Logo from "/public/images/Logo/Logo.png";
 
 const Hero = () => {
   const heroStyle = {
     width: "100vw",
     height: "100vh",
-    objectFit: "fill",
+    objectFit: "cover",
   };
 
   return (
     <Box
       sx={{
         position: "relative",
-        height: "auto",
+        height: "100vh",
+        overflow: "hidden",
         backgroundColor: "#17253d",
       }}
     >
@@ -29,6 +30,7 @@ const Hero = () => {
           left: "0",
           right: "0",
           bottom: "0.4rem",
+          height: "100vh",
           backgroundColor: "rgba(0,0,0,0.1)",
           display: "flex",
           flexDirection: "column",
