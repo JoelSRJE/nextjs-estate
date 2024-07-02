@@ -3,7 +3,7 @@ export const buildings = [
     propertyId: 1,
     propertyLink: "/",
     propertyImage: "/images/properties/apartment/apartmentbuilding.png",
-    propertyName: "Apartments",
+    propertyName: "Residential",
   },
   {
     propertyId: 2,

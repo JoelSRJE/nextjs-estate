@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Card, CardMedia } from "@mui/material";
+import { Box, Card, CardMedia, Typography } from "@mui/material";
 import Image from "next/image";
 
 const PropertyCard = ({ propertyImage, propertyName, isFirst, isLast }) => {
@@ -14,6 +14,7 @@ const PropertyCard = ({ propertyImage, propertyName, isFirst, isLast }) => {
         cursor: "pointer",
         height: "40rem",
         position: "relative",
+        overflow: "hidden",
       }}
     >
       {/* overlay */}
@@ -35,13 +36,29 @@ const PropertyCard = ({ propertyImage, propertyName, isFirst, isLast }) => {
           justifyContent: "center",
           alignItems: "center",
           color: "#F1F1F1",
-          transition: "0.3s ease",
+          transition: "0.4s ease",
           height: "40rem",
           "&:hover": {
             backgroundColor: "rgba(0,0,0,0)",
           },
         }}
-      ></Box>
+      >
+        <Typography
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100%",
+            width: "100%",
+            opacity: "0",
+            fontSize: "3rem",
+            textShadow: "6px 5px 10px  black",
+            "&:hover": { opacity: "1" },
+          }}
+        >
+          {propertyName}
+        </Typography>
+      </Box>
     </Card>
   );
 };
