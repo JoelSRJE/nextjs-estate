@@ -1,9 +1,14 @@
+"use client";
 import { Box, Typography, Button } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import Logo from "/public/images/Logo/Logo.png";
 import Image from "next/image";
+import SignInModal from "../signin/signinmodal";
 
 const Navbar = () => {
+  const [openModal, setOpenModal] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   const navOptions = [
     {
       link: "/",
@@ -23,6 +28,23 @@ const Navbar = () => {
     },
   ];
 
+  const handleOpenModal = () => {
+    setOpenModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
+
+  const handleLogin = () => {
+    setIsLoggedIn(true);
+    handleCloseModal();
+  };
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+  };
+
   return (
     <Box
       sx={{
@@ -32,7 +54,7 @@ const Navbar = () => {
         width: "100%",
         display: "flex",
         justifyContent: "space-between",
-        padding: "0.5rem 1rem",
+        padding: "0.5rem 3rem",
         height: "5rem",
         alignItems: "center",
         marginTop: "0rem",
@@ -47,7 +69,7 @@ const Navbar = () => {
           "&:hover": { backgroundColor: "transparent" },
         }}
       >
-        <Image src={Logo} width={100} height={100} />
+        <Image src={Logo} width={100} height={100} alt="Tenants Logo" />
         <Typography
           sx={{
             position: "absolute",
@@ -60,45 +82,81 @@ const Navbar = () => {
           Tenants
         </Typography>
       </Button>
-
-      <Box sx={{ display: "flex", gap: "0.5rem", alignContent: "center" }}>
+      <Box
+        sx={{
+          display: "flex",
+          gap: "0.5rem",
+          alignContent: "center",
+        }}
+      >
         {navOptions.map((item, idx) => (
           <Button
             key={idx}
             href={item.link}
             sx={{
-              textDecoration: "none",
               color: "#F1F1F1",
               gap: "1rem",
-              transition: "0.3s ease-in",
+              transition: "0.2s ease",
               "&:hover": {
                 backgroundColor: "rgba(225,225,225,0.6)",
                 transform: "scale(1.1)",
               },
             }}
           >
-            {item.text}
+            <Typography
+              sx={{
+                position: "relative",
+                top: "0.1rem",
+                textTransform: "none",
+                fontSize: "1.2rem",
+              }}
+            >
+              {item.text}
+            </Typography>
           </Button>
         ))}
       </Box>
-
       <Box sx={{ display: "flex", alignItems: "center" }}>
-        <Button
-          sx={{
-            marginTop: "0.3rem",
-            color: "#F1F1F1",
-            transition: "0.3s ease-in",
-            "&:hover": {
-              backgroundColor: "rgba(225,225,225,0.6)",
-            },
-          }}
-        >
-          Log In
-        </Button>
+        {!isLoggedIn ? (
+          <Button
+            sx={{
+              marginTop: "0.3rem",
+              color: "#F1F1F1",
+              transition: "0.2s ease",
+              "&:hover": {
+                backgroundColor: "rgba(225,225,225,0.6)",
+              },
+            }}
+            onClick={handleOpenModal}
+          >
+            <Typography sx={{ textTransform: "none" }}>Sign In</Typography>
+          </Button>
+        ) : (
+          <Button
+            sx={{
+              marginTop: "0.3rem",
+              color: "#F1F1F1",
+              transition: "0.2s ease",
+              "&:hover": {
+                backgroundColor: "rgba(225,225,225,0.6)",
+              },
+            }}
+            onClick={handleLogout}
+          >
+            <Typography sx={{ textTransform: "none" }}>Sign Out</Typography>
+          </Button>
+        )}
+
         <Typography sx={{ color: "gray" }}>|</Typography>
-        {/* But till en ikon som togglar från en måne till en sol */}
+        {/* Byt till en ikon som togglar från en måne till en sol */}
         <Button sx={{ marginTop: "0.3rem", color: "#F1F1F1" }}>Theme</Button>
       </Box>
+
+      <SignInModal
+        open={openModal}
+        handleCloseModal={handleCloseModal}
+        handleLogin={handleLogin}
+      />
     </Box>
   );
 };

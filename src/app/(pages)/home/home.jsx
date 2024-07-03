@@ -8,8 +8,8 @@ import About from "../about/page";
 const LandingPage = () => {
   return (
     <Box>
-      {/* <Hero /> */}
-      <About />
+      <Hero />
+      {/* <About /> */}
       <InfoSection />
       <Properties />
     </Box>
