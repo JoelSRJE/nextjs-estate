@@ -4,7 +4,7 @@ import { Box } from "@mui/material";
 
 /*  Todo
 
-Skapa inloggning/registrering
+Skapa en sidomeny för när man är inloggad
 Skapa "about sidan"
 skapa "contact sidan"
 Skapa en backend och koppla det så man kan skapa "listings"

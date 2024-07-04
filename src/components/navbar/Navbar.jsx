@@ -4,10 +4,12 @@ import React, { useState } from "react";
 import Logo from "/public/images/Logo/Logo.png";
 import Image from "next/image";
 import SignInModal from "../signin/signinmodal";
+import Sidebar from "./sidebar/sidebar";
 
 const Navbar = () => {
   const [openModal, setOpenModal] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [openSide, setOpenSide] = useState(false);
 
   const navOptions = [
     {
@@ -38,13 +40,22 @@ const Navbar = () => {
 
   const handleLogin = () => {
     setIsLoggedIn(true);
+    setOpenSide(false);
     handleCloseModal();
   };
 
   const handleLogout = () => {
     setIsLoggedIn(false);
+    setOpenSide(false);
   };
 
+  const handleOpenSide = () => {
+    setOpenSide(true);
+  };
+
+  const handleCloseSide = () => {
+    setOpenSide(false);
+  };
   return (
     <Box
       sx={{
@@ -157,6 +168,18 @@ const Navbar = () => {
         handleCloseModal={handleCloseModal}
         handleLogin={handleLogin}
       />
+
+      <Box sx={{ position: "absolute" }}>
+        {isLoggedIn ? (
+          <Sidebar
+            open={handleOpenSide}
+            close={handleCloseSide}
+            handleLogout={handleLogout}
+          />
+        ) : (
+          <Sidebar open={openSide} close={handleCloseSide} />
+        )}
+      </Box>
     </Box>
   );
 };
