@@ -18,30 +18,32 @@ const SignUpModal = ({ open, close, openLogin }) => {
     email: "",
     password: "",
   });
-  const [error, setError] = useState(null);
+  const [message, setMessage] = useState(null);
+  const [isSuccessfull, setIsSuccessfull] = useState(false);
 
+  // Saves the data given by user
   const handleFormDataChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
+  // Registers a new user
   const handleRegisterClick = async (e) => {
     e.preventDefault();
-    console.log(formData);
     try {
       const result = await registerUser(formData);
-      if (result.success) {
-        console.log("Sucessfully registered!");
+      setIsSuccessfull(true);
+      if (isSuccessfull === true) {
         setFormData({ username: "", email: "", password: "" });
-        setError(null);
         close();
       } else {
-        setError(result.error || "Faile to register");
+        setMessage(result.error || "Failed to register");
+        console.log("Error registering: ", error);
       }
     } catch (error) {
-      console.error("Failed to register", error);
-      setError("Failed to register. Please try again!");
+      setMessage("Failed to register. Please try again!");
     }
+    setMessage("You're account has been registered!");
   };
 
   return (
@@ -115,9 +117,17 @@ const SignUpModal = ({ open, close, openLogin }) => {
           value={formData.password}
           onChange={handleFormDataChange}
         />
-        {error && (
-          <Typography sx={{ color: "red", fontSize: "1rem" }}>
-            {error}
+        {!isSuccessfull ? (
+          <Typography
+            sx={{ color: "red", fontSize: "1.4rem", fontWeight: "600" }}
+          >
+            {message}
+          </Typography>
+        ) : (
+          <Typography
+            sx={{ color: "green", fontSize: "1.4rem", fontWeight: "600" }}
+          >
+            {message}
           </Typography>
         )}
       </DialogContent>

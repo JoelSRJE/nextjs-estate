@@ -1,25 +1,26 @@
 import mongoose, { Schema } from "mongoose";
 import bcrypt from "bcryptjs";
 
-const userSchema = new Schema(
-  {
-    username: {
-      type: String,
-      required: true,
-      unique: true,
-    },
-    email: {
-      type: String,
-      required: true,
-      unique: true,
-    },
-    password: {
-      type: String,
-      required: true,
-    },
+const userSchema = new Schema({
+  username: {
+    type: String,
+    required: true,
+    unique: true,
   },
-  { timestamps: true }
-);
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  password: {
+    type: String,
+    required: true,
+  },
+  isLoggedIn: {
+    type: Boolean,
+    required: true,
+  },
+});
 
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {
@@ -38,6 +39,6 @@ userSchema.methods.matchPassword = async function (enteredPassword) {
   }
 };
 
-const UserModel = mongoose.model("User", userSchema);
+const UserModel = mongoose.models.User || mongoose.model("User", userSchema);
 
 export default UserModel;
