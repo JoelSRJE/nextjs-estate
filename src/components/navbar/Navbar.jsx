@@ -5,11 +5,14 @@ import Logo from "/public/images/Logo/Logo.png";
 import Image from "next/image";
 import SignInModal from "../signin/signinmodal";
 import Sidebar from "./sidebar/sidebar";
+import SignUpModal from "../register/signupmodal";
 
 const Navbar = () => {
-  const [openModal, setOpenModal] = useState(false);
+  const [openSignUpModal, setOpenSignUpModal] = useState(false);
+  const [openSignInModal, setOpenSignInModal] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [openSide, setOpenSide] = useState(false);
+  const [openSidebar, setOpenSidebar] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
 
   const navOptions = [
     {
@@ -30,31 +33,53 @@ const Navbar = () => {
     },
   ];
 
-  const handleOpenModal = () => {
-    setOpenModal(true);
+  const handleOpenSignInModal = () => {
+    setOpenSignInModal(true);
   };
 
-  const handleCloseModal = () => {
-    setOpenModal(false);
+  const handleCloseSignInModal = () => {
+    setOpenSignInModal(false);
   };
 
-  const handleLogin = () => {
+  const handleOpenSignUpModal = () => {
+    setOpenSignUpModal(true);
+  };
+
+  const handleCloseSignUpModal = () => {
+    setOpenSignUpModal(false);
+  };
+
+  const handleOpenFromRegister = () => {
+    setOpenSignUpModal(false);
+    setOpenSignInModal(true);
+  };
+
+  const handleOpenFromLogin = () => {
+    setOpenSignInModal(false);
+    setOpenSignUpModal(true);
+  };
+
+  const handleRegister = () => {
+    setCloseSignUpModal(false);
+  };
+
+  const handleLogin = (user) => {
     setIsLoggedIn(true);
-    setOpenSide(false);
-    handleCloseModal();
+    setOpenSidebar(true);
+    handleCloseSignInModal(false);
   };
 
   const handleLogout = () => {
     setIsLoggedIn(false);
-    setOpenSide(false);
+    setOpenSidebar(false);
   };
 
-  const handleOpenSide = () => {
-    setOpenSide(true);
+  const handleOpenSidbar = () => {
+    setOpenSidebar(true);
   };
 
-  const handleCloseSide = () => {
-    setOpenSide(false);
+  const handleCloseSidebar = () => {
+    setOpenSidebar(false);
   };
   return (
     <Box
@@ -129,19 +154,34 @@ const Navbar = () => {
       </Box>
       <Box sx={{ display: "flex", alignItems: "center" }}>
         {!isLoggedIn ? (
-          <Button
-            sx={{
-              marginTop: "0.3rem",
-              color: "#F1F1F1",
-              transition: "0.2s ease",
-              "&:hover": {
-                backgroundColor: "rgba(225,225,225,0.6)",
-              },
-            }}
-            onClick={handleOpenModal}
-          >
-            <Typography sx={{ textTransform: "none" }}>Sign In</Typography>
-          </Button>
+          <Box>
+            <Button
+              sx={{
+                marginTop: "0.3rem",
+                color: "#F1F1F1",
+                transition: "0.2s ease",
+                "&:hover": {
+                  backgroundColor: "rgba(225,225,225,0.6)",
+                },
+              }}
+              onClick={handleOpenSignInModal}
+            >
+              <Typography sx={{ textTransform: "none" }}>Sign In</Typography>
+            </Button>
+            <Button
+              sx={{
+                marginTop: "0.3rem",
+                color: "#F1F1F1",
+                transition: "0.2s ease",
+                "&:hover": {
+                  backgroundColor: "rgba(225,225,225,0.6)",
+                },
+              }}
+              onClick={handleOpenSignUpModal}
+            >
+              <Typography sx={{ textTransform: "none" }}>Sign Up</Typography>
+            </Button>
+          </Box>
         ) : (
           <Button
             sx={{
@@ -164,20 +204,27 @@ const Navbar = () => {
       </Box>
 
       <SignInModal
-        open={openModal}
-        handleCloseModal={handleCloseModal}
-        handleLogin={handleLogin}
+        open={openSignInModal}
+        close={handleCloseSignInModal}
+        login={handleLogin}
+        openRegister={handleOpenFromLogin}
+      />
+      <SignUpModal
+        open={openSignUpModal}
+        close={handleCloseSignUpModal}
+        register={handleRegister}
+        openLogin={handleOpenFromRegister}
       />
 
       <Box sx={{ position: "absolute" }}>
         {isLoggedIn ? (
           <Sidebar
-            open={handleOpenSide}
-            close={handleCloseSide}
+            open={openSidebar}
+            close={handleCloseSidebar}
             handleLogout={handleLogout}
           />
         ) : (
-          <Sidebar open={openSide} close={handleCloseSide} />
+          <Sidebar open={openSidebar} close={handleCloseSidebar} />
         )}
       </Box>
     </Box>

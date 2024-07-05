@@ -10,20 +10,46 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { registerUser } from "@/lib/actions";
 
-const SignInModal = ({ open, close, login, openRegister }) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+const SignUpModal = ({ open, close, openLogin }) => {
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
   const [error, setError] = useState(null);
 
-  const handleLoginClick = async () => {};
+  const handleFormDataChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleRegisterClick = async (e) => {
+    e.preventDefault();
+    console.log(formData);
+    try {
+      const result = await registerUser(formData);
+      if (result.success) {
+        console.log("Sucessfully registered!");
+        setFormData({ username: "", email: "", password: "" });
+        setError(null);
+        close();
+      } else {
+        setError(result.error || "Faile to register");
+      }
+    } catch (error) {
+      console.error("Failed to register", error);
+      setError("Failed to register. Please try again!");
+    }
+  };
 
   return (
     <Dialog
       open={open}
       onClose={close}
-      aria-labelledby="signin-dialog-title"
-      aria-describedby="signin-dialog-description"
+      aria-labelledby="signup-dialog-title"
+      aria-describedby="signup-dialog-description"
       PaperProps={{
         sx: {
           display: "flex",
@@ -51,7 +77,7 @@ const SignInModal = ({ open, close, login, openRegister }) => {
             textShadow: "1px 1px ",
           }}
         >
-          Login
+          Sign Up
         </DialogTitle>
         <Button sx={{ fontSize: "1.4rem", color: "#282828" }} onClick={close}>
           X
@@ -64,19 +90,30 @@ const SignInModal = ({ open, close, login, openRegister }) => {
         <TextField
           autoFocus
           margin="dense"
+          label="Username"
+          type="text"
+          variant="outlined"
+          name="username"
+          value={formData.username}
+          onChange={handleFormDataChange}
+        />
+        <TextField
+          margin="dense"
           label="Email Address"
           type="email"
           variant="outlined"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          name="email"
+          value={formData.email}
+          onChange={handleFormDataChange}
         />
         <TextField
           margin="dense"
           label="Password"
           type="password"
           variant="outlined"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          name="password"
+          value={formData.password}
+          onChange={handleFormDataChange}
         />
         {error && (
           <Typography sx={{ color: "red", fontSize: "1rem" }}>
@@ -96,26 +133,20 @@ const SignInModal = ({ open, close, login, openRegister }) => {
             color: "#282828",
             textTransform: "none",
             fontSize: "1.2rem",
-
             "&:hover": {
               backgroundColor: "#add8e6",
             },
           }}
-          onClick={login}
+          onClick={handleRegisterClick}
         >
-          Login
+          Sign Up
         </Button>
         <Typography>
-          Forgot
-          <Button sx={{ textTransform: "none" }}>Email / Password?</Button>
-        </Typography>
-
-        <Typography sx={{ position: "relative", left: "1rem" }}>
-          Don't have an account? <Button onClick={openRegister}>Sign up</Button>
+          Already have an account? <Button onClick={openLogin}>Login</Button>
         </Typography>
       </DialogActions>
     </Dialog>
   );
 };
 
-export default SignInModal;
+export default SignUpModal;
