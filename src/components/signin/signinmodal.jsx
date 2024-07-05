@@ -10,13 +10,45 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { loginUser } from "@/lib/actions";
 
 const SignInModal = ({ open, close, login, openRegister }) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState(null);
+  const [user, setUser] = useState({ email: "", password: "" });
+  const [message, setMessage] = useState(null);
+  const [isSuccessfull, setIsSuccessfull] = useState(false);
 
-  const handleLoginClick = async () => {};
+  /* Todo
+Hämta användarens information.
+visa upp användarnamnet någonstans.
+toggla så man ser sidebaren.
+*/
+
+  // Saves the data given by user for login attempt.
+  const handleUserData = (e) => {
+    const { name, value } = e.target;
+    setUser({ ...user, [name]: value });
+  };
+
+  // The user logs in if successfull
+  const handleLoginClick = async (e) => {
+    e.preventDefault();
+    try {
+      const result = await loginUser(user);
+
+      if (result.success) {
+        setIsSuccessfull(true);
+      } else {
+        setMessage(result.error);
+      }
+    } catch (error) {
+      setMessage("Failed to login. Please try again!");
+    }
+    setMessage("You're logged in!");
+    setTimeout(() => {
+      close();
+      setMessage(null);
+    }, 3000);
+  };
 
   return (
     <Dialog
@@ -38,7 +70,7 @@ const SignInModal = ({ open, close, login, openRegister }) => {
       }}
       BackdropProps={{
         sx: {
-          backgroundColor: "rgba(0,0,0,0.7)",
+          backgroundColor: "rgba(0,0,0,0.5)",
         },
       }}
     >
@@ -62,25 +94,34 @@ const SignInModal = ({ open, close, login, openRegister }) => {
         sx={{ display: "flex", flexDirection: "column", gap: "1rem" }}
       >
         <TextField
-          autoFocus
           margin="dense"
           label="Email Address"
           type="email"
           variant="outlined"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          name="email"
+          value={user.email}
+          onChange={handleUserData}
         />
         <TextField
           margin="dense"
           label="Password"
           type="password"
           variant="outlined"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          name="password"
+          value={user.password}
+          onChange={handleUserData}
         />
-        {error && (
-          <Typography sx={{ color: "red", fontSize: "1rem" }}>
-            {error}
+        {!isSuccessfull ? (
+          <Typography
+            sx={{ color: "red", fontSize: "1.4rem", fontWeight: "600" }}
+          >
+            {message}
+          </Typography>
+        ) : (
+          <Typography
+            sx={{ color: "green", fontSize: "1.4rem", fontWeight: "600" }}
+          >
+            {message}
           </Typography>
         )}
       </DialogContent>
@@ -101,7 +142,7 @@ const SignInModal = ({ open, close, login, openRegister }) => {
               backgroundColor: "#add8e6",
             },
           }}
-          onClick={login}
+          onClick={handleLoginClick}
         >
           Login
         </Button>

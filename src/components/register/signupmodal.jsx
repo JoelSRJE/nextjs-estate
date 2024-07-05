@@ -17,33 +17,41 @@ const SignUpModal = ({ open, close, openLogin }) => {
     username: "",
     email: "",
     password: "",
+    isLoggedIn: false,
   });
   const [message, setMessage] = useState(null);
   const [isSuccessfull, setIsSuccessfull] = useState(false);
 
-  // Saves the data given by user
+  // Saves the data given by user for registration.
   const handleFormDataChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  // Registers a new user
+  // Registers a new user if successfull.
   const handleRegisterClick = async (e) => {
     e.preventDefault();
     try {
       const result = await registerUser(formData);
-      setIsSuccessfull(true);
-      if (isSuccessfull === true) {
-        setFormData({ username: "", email: "", password: "" });
-        close();
+
+      if (result.success) {
+        setIsSuccessfull(true);
       } else {
-        setMessage(result.error || "Failed to register");
-        console.log("Error registering: ", error);
+        setMessage(result.error);
       }
     } catch (error) {
       setMessage("Failed to register. Please try again!");
     }
+    setFormData({
+      username: "",
+      email: "",
+      password: "",
+    });
     setMessage("You're account has been registered!");
+    setTimeout(() => {
+      close();
+      setMessage(null);
+    }, 3000);
   };
 
   return (
@@ -66,7 +74,7 @@ const SignUpModal = ({ open, close, openLogin }) => {
       }}
       BackdropProps={{
         sx: {
-          backgroundColor: "rgba(0,0,0,0.7)",
+          backgroundColor: "rgba(0,0,0,0.5)",
         },
       }}
     >
