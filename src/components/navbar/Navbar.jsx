@@ -6,6 +6,7 @@ import Image from "next/image";
 import SignInModal from "../signin/signinmodal";
 import Sidebar from "./sidebar/sidebar";
 import SignUpModal from "../register/signupmodal";
+import { logoutUser } from "@/lib/actions";
 
 const Navbar = () => {
   const [openSignUpModal, setOpenSignUpModal] = useState(false);
@@ -13,6 +14,7 @@ const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [openSidebar, setOpenSidebar] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
+  const [message, setMessage] = useState(null);
 
   const navOptions = [
     {
@@ -66,21 +68,42 @@ const Navbar = () => {
   const handleLogin = (user) => {
     setIsLoggedIn(true);
     setOpenSidebar(true);
+    setCurrentUser(user);
     handleCloseSignInModal(false);
   };
 
-  const handleLogout = () => {
-    setIsLoggedIn(false);
-    setOpenSidebar(false);
+  const handleLogout = async () => {
+    try {
+      const result = await logoutUser(currentUser);
+      if (result.success) {
+        setIsLoggedIn(false);
+        setOpenSidebar(false);
+        setCurrentUser(null);
+        displayStatusMessage(result.message);
+        setTimeout(() => {
+          displayStatusMessage(null);
+        }, 4000);
+      } else {
+        displayStatusMessage(result.message);
+      }
+    } catch (error) {
+      displayStatusMessage("An error occurred while logging out");
+      console.error("Logout error:", error);
+    }
   };
 
-  const handleOpenSidbar = () => {
-    setOpenSidebar(true);
+  const displayStatusMessage = (result) => {
+    setMessage(result);
   };
 
-  const handleCloseSidebar = () => {
-    setOpenSidebar(false);
-  };
+  // const handleOpenSidebar = () => {
+  //   setOpenSidebar(true);
+  // };
+
+  // const handleSidebar = () => {
+  //   setOpenSidebar(false);
+  // };
+
   return (
     <Box
       sx={{
@@ -219,14 +242,25 @@ const Navbar = () => {
       <Box sx={{ position: "absolute" }}>
         {isLoggedIn ? (
           <Sidebar
-            open={openSidebar}
-            close={handleCloseSidebar}
+            handleSidebar={openSidebar}
             handleLogout={handleLogout}
+            userInfo={currentUser}
           />
         ) : (
-          <Sidebar open={openSidebar} close={handleCloseSidebar} />
+          <Sidebar handleSidebar={openSidebar} />
         )}
       </Box>
+      <Typography
+        sx={{
+          position: "absolute",
+          left: "11vw",
+          fontSize: "1.3rem",
+          fontWeight: "600",
+          color: "#F1F1F1",
+        }}
+      >
+        {message}
+      </Typography>
     </Box>
   );
 };

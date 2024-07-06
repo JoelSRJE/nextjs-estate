@@ -1,16 +1,20 @@
 "use cluent";
 import React, { useState } from "react";
 import {
+  Box,
   Drawer,
   IconButton,
   List,
   ListItem,
   ListItemText,
+  Typography,
 } from "@mui/material";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 
-const Sidebar = ({ open, close, handleLogout }) => {
+const Sidebar = ({ handleSidebar, handleLogout, userInfo }) => {
   const [isExpanded, setIsExpanded] = useState(true);
+
+  if (!handleSidebar) return null;
 
   const sideMenuItems = [
     {
@@ -47,8 +51,8 @@ const Sidebar = ({ open, close, handleLogout }) => {
     <Drawer
       anchor="left"
       variant="persistent"
-      open={open}
-      onClose={close}
+      open={handleSidebar}
+      onClose={handleSidebar}
       hideBackdrop={true}
       disableScrolllock={true}
       PaperProps={{
@@ -80,6 +84,15 @@ const Sidebar = ({ open, close, handleLogout }) => {
           <FaAngleRight style={styleIcon} />
         )}
       </IconButton>
+
+      {isExpanded && userInfo && (
+        <Box sx={{ padding: "1rem", textAlign: "center" }}>
+          <Typography sx={{ fontSize: "1rem", fontWeight: "600" }}>
+            Welcome, {userInfo.username}
+          </Typography>
+        </Box>
+      )}
+
       <List>
         {sideMenuItems.map((item, idx) => (
           <ListItem

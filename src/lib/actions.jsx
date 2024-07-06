@@ -1,5 +1,7 @@
 "use server";
 
+import { Jwt } from "jsonwebtoken";
+import { setCookie } from "cookies-next";
 import bcrypt from "bcryptjs";
 import connectToDB from "./dbConnect";
 import UserModel from "./models";
@@ -19,48 +21,72 @@ export const registerUser = async (formData) => {
 
     await newUser.save();
 
-    console.log("Successfully registered user: ", newUser);
     return { success: "Registered user!" };
   } catch (error) {
     return { error: "Failed to register user" };
   }
 };
 
-export const loginUser = async (user) => {
-  const { email, password } = user;
+export const loginUser = async (credentials) => {
+  const { email, password } = credentials;
 
-  console.log("Begun logging in...");
   try {
     await connectToDB();
 
     const user = await UserModel.findOne({ email });
 
     if (user) {
-      const isMatch = await bcrypt.compare(password, user.password);
+      const passwordMatch = await bcrypt.compare(password, user.password);
 
-      if (isMatch) {
+      if (passwordMatch) {
         const updateResult = await UserModel.updateOne(
           { email },
           { $set: { isLoggedIn: true } }
         );
 
+        // Receives the updated info
+        const updatedUser = await UserModel.findOne({ email }).lean();
+        const plainUser = JSON.parse(JSON.stringify(updatedUser));
+
         if (updateResult.modifiedCount > 0) {
-          console.log("User logged in successfully");
-          return { success: "Logged in successfully" };
+          // Sends the updated info back
+          return { success: "Logged in successfully", updatedUser: plainUser };
         } else {
-          console.log("Failed to update isLoggedIn");
           return { error: "Failed to update" };
         }
       } else {
-        console.log("Passwords don't match");
         return { error: "Invalid credentials" };
       }
     } else {
-      console.log("User not found");
-      return { error: "Invalid credentials" };
+      return { error: "User not found. Please register to log in" };
     }
   } catch (error) {
-    console.log("Error from actions.js: ", error); // Ta bort efteråt
     return { error: "Failed to log in" };
+  }
+};
+
+export const logoutUser = async (currentUser) => {
+  const { email } = currentUser;
+  try {
+    await connectToDB();
+
+    const checkUser = await UserModel.findOne({ email });
+
+    if (checkUser) {
+      const updateStatus = await UserModel.updateOne(
+        { email },
+        { $set: { isLoggedIn: false } }
+      );
+
+      if (updateStatus.modifiedCount > 0) {
+        return { success: true, message: "User logged out" };
+      } else {
+        return { error: false, message: "Failed to logout user!" };
+      }
+    } else {
+      return { error: false, message: "Cannot find user!" };
+    }
+  } catch (error) {
+    return { error: false, message: "An error occured while logging out" };
   }
 };

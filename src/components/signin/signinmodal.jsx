@@ -13,37 +13,33 @@ import {
 import { loginUser } from "@/lib/actions";
 
 const SignInModal = ({ open, close, login, openRegister }) => {
-  const [user, setUser] = useState({ email: "", password: "" });
+  const [credentials, setCredentials] = useState({ email: "", password: "" });
   const [message, setMessage] = useState(null);
   const [isSuccessfull, setIsSuccessfull] = useState(false);
-
-  /* Todo
-Hämta användarens information.
-visa upp användarnamnet någonstans.
-toggla så man ser sidebaren.
-*/
 
   // Saves the data given by user for login attempt.
   const handleUserData = (e) => {
     const { name, value } = e.target;
-    setUser({ ...user, [name]: value });
+    setCredentials({ ...credentials, [name]: value });
   };
 
   // The user logs in if successfull
   const handleLoginClick = async (e) => {
     e.preventDefault();
     try {
-      const result = await loginUser(user);
+      const result = await loginUser(credentials);
 
       if (result.success) {
         setIsSuccessfull(true);
+        setMessage(result.success);
+        login(result.updatedUser);
       } else {
         setMessage(result.error);
       }
     } catch (error) {
       setMessage("Failed to login. Please try again!");
     }
-    setMessage("You're logged in!");
+
     setTimeout(() => {
       close();
       setMessage(null);
@@ -99,7 +95,7 @@ toggla så man ser sidebaren.
           type="email"
           variant="outlined"
           name="email"
-          value={user.email}
+          value={credentials.email}
           onChange={handleUserData}
         />
         <TextField
@@ -108,7 +104,7 @@ toggla så man ser sidebaren.
           type="password"
           variant="outlined"
           name="password"
-          value={user.password}
+          value={credentials.password}
           onChange={handleUserData}
         />
         {!isSuccessfull ? (
