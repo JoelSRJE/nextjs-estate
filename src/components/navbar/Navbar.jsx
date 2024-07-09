@@ -1,20 +1,29 @@
-"use client";
 import { Box, Typography, Button } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Logo from "/public/images/Logo/Logo.png";
 import Image from "next/image";
 import SignInModal from "../signin/signinmodal";
 import Sidebar from "./sidebar/sidebar";
 import SignUpModal from "../register/signupmodal";
-import { logoutUser } from "@/lib/actions";
+import { useSession, signOut } from "next-auth/react";
 
 const Navbar = () => {
   const [openSignUpModal, setOpenSignUpModal] = useState(false);
   const [openSignInModal, setOpenSignInModal] = useState(false);
+
+  const [message, setMessage] = useState(null);
+  const { data: session, status } = useSession();
+
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [openSidebar, setOpenSidebar] = useState(false);
-  const [currentUser, setCurrentUser] = useState(null);
-  const [message, setMessage] = useState(null);
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+    }
+  }, [status]);
 
   const navOptions = [
     {
@@ -65,29 +74,23 @@ const Navbar = () => {
     setCloseSignUpModal(false);
   };
 
+  /*
   const handleLogin = (user) => {
     setIsLoggedIn(true);
     setOpenSidebar(true);
     setCurrentUser(user);
     handleCloseSignInModal(false);
   };
+*/
 
   const handleLogout = async () => {
     try {
-      const result = await logoutUser(currentUser);
-      if (result.success) {
-        setIsLoggedIn(false);
-        setOpenSidebar(false);
-        setCurrentUser(null);
-        displayStatusMessage(result.message);
-        setTimeout(() => {
-          displayStatusMessage(null);
-        }, 4000);
-      } else {
-        displayStatusMessage(result.message);
+      const result = await signOut();
+      if (result.error) {
+        setMessage(result.error);
       }
     } catch (error) {
-      displayStatusMessage("An error occurred while logging out");
+      setMessage("An error occured while logging out");
       console.error("Logout error:", error);
     }
   };
@@ -215,7 +218,7 @@ const Navbar = () => {
                 backgroundColor: "rgba(225,225,225,0.6)",
               },
             }}
-            onClick={handleLogout}
+            onClick={(e) => handleLogout()}
           >
             <Typography sx={{ textTransform: "none" }}>Sign Out</Typography>
           </Button>
@@ -226,11 +229,12 @@ const Navbar = () => {
         <Button sx={{ marginTop: "0.3rem", color: "#F1F1F1" }}>Theme</Button>
       </Box>
 
+      {/* Modal section */}
       <SignInModal
         open={openSignInModal}
         close={handleCloseSignInModal}
-        login={handleLogin}
         openRegister={handleOpenFromLogin}
+        setIsLoggedIn={setIsLoggedIn}
       />
       <SignUpModal
         open={openSignUpModal}
@@ -239,17 +243,18 @@ const Navbar = () => {
         openLogin={handleOpenFromRegister}
       />
 
+      {/* Sidebar section - only display if logged in */}
       <Box sx={{ position: "absolute" }}>
-        {isLoggedIn ? (
+        {isLoggedIn && session?.user && (
           <Sidebar
             handleSidebar={openSidebar}
             handleLogout={handleLogout}
-            userInfo={currentUser}
+            userInfo={session?.user}
           />
-        ) : (
-          <Sidebar handleSidebar={openSidebar} />
         )}
       </Box>
+
+      {/* Message display */}
       <Typography
         sx={{
           position: "absolute",

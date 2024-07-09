@@ -1,4 +1,3 @@
-"use cluent";
 import React, { useState } from "react";
 import {
   Box,
@@ -10,6 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
+import { signOut } from "next-auth/react";
 
 const Sidebar = ({ handleSidebar, handleLogout, userInfo }) => {
   const [isExpanded, setIsExpanded] = useState(true);
@@ -32,7 +32,7 @@ const Sidebar = ({ handleSidebar, handleLogout, userInfo }) => {
     {
       text: "Sign Out",
       link: "/",
-      action: handleLogout,
+      action: signOut(),
     },
   ];
 
@@ -85,10 +85,10 @@ const Sidebar = ({ handleSidebar, handleLogout, userInfo }) => {
         )}
       </IconButton>
 
-      {isExpanded && userInfo && (
+      {isExpanded && (
         <Box sx={{ padding: "1rem", textAlign: "center" }}>
           <Typography sx={{ fontSize: "1rem", fontWeight: "600" }}>
-            Welcome, {userInfo.username}
+            Welcome, {session?.user?.username}
           </Typography>
         </Box>
       )}

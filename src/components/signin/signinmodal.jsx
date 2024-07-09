@@ -1,4 +1,3 @@
-"use client";
 import React, { useState } from "react";
 import {
   Box,
@@ -10,19 +9,44 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { loginUser } from "@/lib/actions";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
-const SignInModal = ({ open, close, login, openRegister }) => {
-  const [credentials, setCredentials] = useState({ email: "", password: "" });
+const SignInModal = ({ open, close, openRegister, setIsLoggedIn }) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [message, setMessage] = useState(null);
   const [isSuccessfull, setIsSuccessfull] = useState(false);
 
-  // Saves the data given by user for login attempt.
-  const handleUserData = (e) => {
-    const { name, value } = e.target;
-    setCredentials({ ...credentials, [name]: value });
+  const router = useRouter();
+
+  const handleLoginClick = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      });
+
+      if (response.error) {
+        setMessage("Invalid credentials");
+        return;
+      }
+      setMessage("You've successfully logged in");
+      setIsSuccessfull(true);
+      setIsLoggedIn(true);
+      setTimeout(() => {
+        close();
+        setMessage(null);
+      }, 3000);
+      router.replace("/");
+    } catch (error) {
+      console.log("Sign in error: ", error);
+    }
   };
 
+  /*
   // The user logs in if successfull
   const handleLoginClick = async (e) => {
     e.preventDefault();
@@ -45,7 +69,7 @@ const SignInModal = ({ open, close, login, openRegister }) => {
       setMessage(null);
     }, 3000);
   };
-
+*/
   return (
     <Dialog
       open={open}
@@ -95,8 +119,8 @@ const SignInModal = ({ open, close, login, openRegister }) => {
           type="email"
           variant="outlined"
           name="email"
-          value={credentials.email}
-          onChange={handleUserData}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
         <TextField
           margin="dense"
@@ -104,8 +128,8 @@ const SignInModal = ({ open, close, login, openRegister }) => {
           type="password"
           variant="outlined"
           name="password"
-          value={credentials.password}
-          onChange={handleUserData}
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
         />
         {!isSuccessfull ? (
           <Typography

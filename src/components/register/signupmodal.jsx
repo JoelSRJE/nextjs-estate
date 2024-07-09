@@ -1,4 +1,3 @@
-"use client";
 import React, { useState } from "react";
 import {
   Box,
@@ -10,24 +9,80 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { registerUser } from "@/lib/actions";
+import { useRouter } from "next/navigation";
 
-const SignUpModal = ({ open, close, openLogin }) => {
-  const [formData, setFormData] = useState({
-    username: "",
-    email: "",
-    password: "",
-    isLoggedIn: false,
-  });
+export const SignUpModal = ({ open, close, openLogin }) => {
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [message, setMessage] = useState(null);
   const [isSuccessfull, setIsSuccessfull] = useState(false);
+  const router = useRouter();
 
-  // Saves the data given by user for registration.
-  const handleFormDataChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+  const handleRegisterClick = async (e) => {
+    e.preventDefault();
+
+    if (!username || !email || !password) {
+      setMessage("All fields must be filled in");
+      return;
+    }
+
+    try {
+      const resUserExists = await fetch("api/userExists", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const { user } = await resUserExists.json();
+
+      if (user) {
+        console.log(user);
+        setMessage("User already exists");
+        return;
+      }
+
+      const resRegister = await fetch("api/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username,
+          email,
+          password,
+          isLoggedIn,
+        }),
+      });
+
+      console.log("ResRegister: ", resRegister);
+
+      if (resRegister.ok) {
+        setUsername("");
+        setEmail("");
+        setPassword("");
+        setIsSuccessfull(true);
+        setMessage("User registered successfully");
+        setTimeout(() => {
+          close();
+          setMessage(null);
+        }, 3000);
+        router.push("/");
+      } else {
+        const data = await resRegister.json();
+        console.log(data);
+        setMessage(data.message || "User registration failed.");
+      }
+    } catch (error) {
+      console.log("Error during registration: ", error);
+      setMessage("Failed to register. Please try again!");
+    }
   };
 
+  /*
   // Registers a new user if successfull.
   const handleRegisterClick = async (e) => {
     e.preventDefault();
@@ -53,6 +108,7 @@ const SignUpModal = ({ open, close, openLogin }) => {
       setMessage(null);
     }, 3000);
   };
+*/
 
   return (
     <Dialog
@@ -104,8 +160,8 @@ const SignUpModal = ({ open, close, openLogin }) => {
           type="text"
           variant="outlined"
           name="username"
-          value={formData.username}
-          onChange={handleFormDataChange}
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
         />
         <TextField
           margin="dense"
@@ -113,8 +169,8 @@ const SignUpModal = ({ open, close, openLogin }) => {
           type="email"
           variant="outlined"
           name="email"
-          value={formData.email}
-          onChange={handleFormDataChange}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
         <TextField
           margin="dense"
@@ -122,8 +178,8 @@ const SignUpModal = ({ open, close, openLogin }) => {
           type="password"
           variant="outlined"
           name="password"
-          value={formData.password}
-          onChange={handleFormDataChange}
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
         />
         {!isSuccessfull ? (
           <Typography
