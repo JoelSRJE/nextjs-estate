@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import React from "react";
 
-const About = () => {
+function About() {
   return (
     <Box
       sx={{
@@ -29,6 +29,6 @@ const About = () => {
       </Box>
     </Box>
   );
-};
+}
 
 export default About;

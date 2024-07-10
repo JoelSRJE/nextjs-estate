@@ -1,9 +1,6 @@
 import LandingPage from "@/app/(pages)/home/home";
 
 import { Box } from "@mui/material";
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
-import { authOptions } from "./api/auth/[...nextauth]/route";
 
 /*  Todo
 
@@ -14,7 +11,7 @@ Skapa en backend och koppla det så man kan skapa "listings"
 
 */
 
-export default async function Home() {
+export default function Home() {
   return (
     <Box
       sx={{
