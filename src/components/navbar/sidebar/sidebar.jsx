@@ -11,8 +11,10 @@ import {
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 import { signOut } from "next-auth/react";
 
-const Sidebar = ({ handleSidebar, userInfo }) => {
+const Sidebar = ({ handleSidebar, handleLogout, userInfo }) => {
   const [isExpanded, setIsExpanded] = useState(true);
+
+  if (!handleSidebar) return null;
 
   const sideMenuItems = [
     {
@@ -50,7 +52,7 @@ const Sidebar = ({ handleSidebar, userInfo }) => {
       anchor="left"
       variant="persistent"
       open={handleSidebar}
-      onClose={() => setIsExpanded(false)}
+      onClose={handleSidebar}
       hideBackdrop={true}
       disableScrolllock={true}
       PaperProps={{
@@ -86,7 +88,7 @@ const Sidebar = ({ handleSidebar, userInfo }) => {
       {isExpanded && (
         <Box sx={{ padding: "1rem", textAlign: "center" }}>
           <Typography sx={{ fontSize: "1rem", fontWeight: "600" }}>
-            Welcome, {userInfo.username}
+            Welcome, {session?.user?.username}
           </Typography>
         </Box>
       )}
