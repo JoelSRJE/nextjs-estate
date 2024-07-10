@@ -13,8 +13,6 @@ export const authOptions = {
       async authorize(credentials) {
         const { email, password } = credentials;
 
-        console.log("Credentials received:", { email, password }); // Log credentials
-
         try {
           await connectToDB();
 
@@ -27,18 +25,15 @@ export const authOptions = {
               password,
               user.password
             );
-            console.log("Password match result:", passwordsMatch); // Log password match result
 
             if (!passwordsMatch) {
-              return null; // Return null if passwords do not match
+              return null;
             }
 
             const updatedUser = await UserModel.updateOne(
               { email },
               { $set: { isLoggedIn: true } }
             );
-
-            console.log("User updated with isLoggedIn: true");
 
             return user;
           } else {
@@ -52,15 +47,28 @@ export const authOptions = {
       },
     }),
   ],
+  secret: process.env.NEXTAUTH_SECRET,
+  jwt: {
+    secret: process.env.JWT_SECRET,
+    maxAge: 60 * 60,
+  },
   session: {
     jwt: true,
   },
-  jwt: {
-    secret: process.env.NEXT_PUBLIC_NEXT_AUTH_SECRET,
+  callbacks: {
+    async jwt(token, user) {
+      if (user) {
+        token.id = user.id;
+        token.username = user.username;
+      }
+      return token;
+    },
+    async session(session, token) {
+      session.user = token;
+      return session;
+    },
   },
-  pages: {
-    signIn: "/",
-  },
+  site: process.env.NEXTAUTH_URL,
 };
 
 const handler = NextAuth(authOptions);
