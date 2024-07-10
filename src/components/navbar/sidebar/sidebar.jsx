@@ -1,3 +1,4 @@
+"use cluent";
 import React, { useState } from "react";
 import {
   Box,
@@ -9,10 +10,11 @@ import {
   Typography,
 } from "@mui/material";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
-import { signOut } from "next-auth/react";
 
-const Sidebar = ({ handleSidebar, userInfo }) => {
+const Sidebar = ({ handleSidebar, handleLogout, userInfo }) => {
   const [isExpanded, setIsExpanded] = useState(true);
+
+  if (!handleSidebar) return null;
 
   const sideMenuItems = [
     {
@@ -30,7 +32,7 @@ const Sidebar = ({ handleSidebar, userInfo }) => {
     {
       text: "Sign Out",
       link: "/",
-      action: signOut(),
+      action: handleLogout,
     },
   ];
 
@@ -50,7 +52,7 @@ const Sidebar = ({ handleSidebar, userInfo }) => {
       anchor="left"
       variant="persistent"
       open={handleSidebar}
-      onClose={() => setIsExpanded(false)}
+      onClose={handleSidebar}
       hideBackdrop={true}
       disableScrolllock={true}
       PaperProps={{
@@ -83,7 +85,7 @@ const Sidebar = ({ handleSidebar, userInfo }) => {
         )}
       </IconButton>
 
-      {isExpanded && (
+      {isExpanded && userInfo && (
         <Box sx={{ padding: "1rem", textAlign: "center" }}>
           <Typography sx={{ fontSize: "1rem", fontWeight: "600" }}>
             Welcome, {userInfo.username}

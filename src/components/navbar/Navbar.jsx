@@ -1,34 +1,20 @@
+"use client";
 import { Box, Typography, Button } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Logo from "/public/images/Logo/Logo.png";
 import Image from "next/image";
 import SignInModal from "../signin/signinmodal";
 import Sidebar from "./sidebar/sidebar";
 import SignUpModal from "../register/signupmodal";
-import { useSession, signOut } from "next-auth/react";
+import { logoutUser } from "@/lib/actions";
 
 const Navbar = () => {
   const [openSignUpModal, setOpenSignUpModal] = useState(false);
   const [openSignInModal, setOpenSignInModal] = useState(false);
-
-  const [message, setMessage] = useState(null);
-  const { data: session, status } = useSession();
-
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [openSidebar, setOpenSidebar] = useState(false);
-
-  useEffect(() => {
-    if (status === "loading") {
-      return <div>Loading...</div>;
-    } else if (status === "authenticated") {
-      setIsLoggedIn(true);
-      setOpenSidebar(true);
-      console.log(openSidebar);
-    } else {
-      setIsLoggedIn(false);
-      setOpenSidebar(false);
-    }
-  }, [status]);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [message, setMessage] = useState(null);
 
   const navOptions = [
     {
@@ -79,14 +65,29 @@ const Navbar = () => {
     setCloseSignUpModal(false);
   };
 
+  const handleLogin = (user) => {
+    setIsLoggedIn(true);
+    setOpenSidebar(true);
+    setCurrentUser(user);
+    handleCloseSignInModal(false);
+  };
+
   const handleLogout = async () => {
     try {
-      const result = await signOut();
-      if (result.error) {
-        setMessage(result.error);
+      const result = await logoutUser(currentUser);
+      if (result.success) {
+        setIsLoggedIn(false);
+        setOpenSidebar(false);
+        setCurrentUser(null);
+        displayStatusMessage(result.message);
+        setTimeout(() => {
+          displayStatusMessage(null);
+        }, 4000);
+      } else {
+        displayStatusMessage(result.message);
       }
     } catch (error) {
-      setMessage("An error occured while logging out");
+      displayStatusMessage("An error occurred while logging out");
       console.error("Logout error:", error);
     }
   };
@@ -95,13 +96,13 @@ const Navbar = () => {
     setMessage(result);
   };
 
-  const handleOpenSidebar = () => {
-    setOpenSidebar(true);
-  };
+  // const handleOpenSidebar = () => {
+  //   setOpenSidebar(true);
+  // };
 
-  const handleSidebar = () => {
-    setOpenSidebar(false);
-  };
+  // const handleSidebar = () => {
+  //   setOpenSidebar(false);
+  // };
 
   return (
     <Box
@@ -214,7 +215,7 @@ const Navbar = () => {
                 backgroundColor: "rgba(225,225,225,0.6)",
               },
             }}
-            onClick={(e) => handleLogout()}
+            onClick={handleLogout}
           >
             <Typography sx={{ textTransform: "none" }}>Sign Out</Typography>
           </Button>
@@ -225,12 +226,11 @@ const Navbar = () => {
         <Button sx={{ marginTop: "0.3rem", color: "#F1F1F1" }}>Theme</Button>
       </Box>
 
-      {/* Modal section */}
       <SignInModal
         open={openSignInModal}
         close={handleCloseSignInModal}
+        login={handleLogin}
         openRegister={handleOpenFromLogin}
-        setIsLoggedIn={setIsLoggedIn}
       />
       <SignUpModal
         open={openSignUpModal}
@@ -239,14 +239,17 @@ const Navbar = () => {
         openLogin={handleOpenFromRegister}
       />
 
-      {/* Sidebar section - only display if logged in */}
       <Box sx={{ position: "absolute" }}>
-        {isLoggedIn && session?.user && (
-          <Sidebar handleSidebar={openSidebar} userInfo={session?.user} />
+        {isLoggedIn ? (
+          <Sidebar
+            handleSidebar={openSidebar}
+            handleLogout={handleLogout}
+            userInfo={currentUser}
+          />
+        ) : (
+          <Sidebar handleSidebar={openSidebar} />
         )}
       </Box>
-
-      {/* Message display */}
       <Typography
         sx={{
           position: "absolute",
