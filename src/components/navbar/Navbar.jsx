@@ -1,12 +1,12 @@
 "use client";
 import { Box, Typography, Button } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Logo from "/public/images/Logo/Logo.png";
 import Image from "next/image";
 import SignInModal from "../signin/signinmodal";
 import Sidebar from "./sidebar/sidebar";
 import SignUpModal from "../register/signupmodal";
-import { logoutUser } from "@/lib/actions";
+import { useCookies } from "react-cookie";
 
 const Navbar = () => {
   const [openSignUpModal, setOpenSignUpModal] = useState(false);
@@ -15,6 +15,22 @@ const Navbar = () => {
   const [openSidebar, setOpenSidebar] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [message, setMessage] = useState(null);
+
+  const [cookies, setCookie, removeCookie] = useCookies([
+    "accessToken",
+    "refreshToken",
+    "currentUser",
+  ]);
+
+  useEffect(() => {
+    if (cookies.accessToken) {
+      setIsLoggedIn(true);
+      setOpenSidebar(true);
+      setCurrentUser(cookies.currentUser);
+    } else {
+      setIsLoggedIn(false);
+    }
+  }, [cookies.accessToken, setIsLoggedIn]);
 
   const navOptions = [
     {
@@ -61,34 +77,34 @@ const Navbar = () => {
     setOpenSignUpModal(true);
   };
 
-  const handleRegister = () => {
-    setCloseSignUpModal(false);
-  };
-
-  const handleLogin = (user) => {
-    setIsLoggedIn(true);
-    setOpenSidebar(true);
-    setCurrentUser(user);
-    handleCloseSignInModal(false);
-  };
-
-  const handleLogout = async () => {
+  const handleLogoutClick = async () => {
     try {
-      const result = await logoutUser(currentUser);
-      if (result.success) {
+      const response = await fetch("api/logout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ currentUser }),
+      });
+
+      if (response.ok) {
+        removeCookie("accessToken", { path: "/" });
+        removeCookie("refreshToken", { path: "/" });
+        removeCookie("currentUser", { path: "/" });
         setIsLoggedIn(false);
         setOpenSidebar(false);
         setCurrentUser(null);
-        displayStatusMessage(result.message);
+        displayStatusMessage(response.message);
         setTimeout(() => {
           displayStatusMessage(null);
         }, 4000);
       } else {
-        displayStatusMessage(result.message);
+        const data = await response.json();
+        displayStatusMessage(data.message);
       }
     } catch (error) {
-      displayStatusMessage("An error occurred while logging out");
-      console.error("Logout error:", error);
+      console.error("Error occured wihle logging out: ", error);
+      displayStatusMessage("Failed to logout. Pleae try again");
     }
   };
 
@@ -96,13 +112,13 @@ const Navbar = () => {
     setMessage(result);
   };
 
-  // const handleOpenSidebar = () => {
-  //   setOpenSidebar(true);
-  // };
+  const handleOpenSidebar = () => {
+    setOpenSidebar(true);
+  };
 
-  // const handleSidebar = () => {
-  //   setOpenSidebar(false);
-  // };
+  const handleCloseSidebar = () => {
+    setOpenSidebar(false);
+  };
 
   return (
     <Box
@@ -215,7 +231,9 @@ const Navbar = () => {
                 backgroundColor: "rgba(225,225,225,0.6)",
               },
             }}
-            onClick={handleLogout}
+            onClick={() => {
+              handleLogoutClick();
+            }}
           >
             <Typography sx={{ textTransform: "none" }}>Sign Out</Typography>
           </Button>
@@ -226,30 +244,33 @@ const Navbar = () => {
         <Button sx={{ marginTop: "0.3rem", color: "#F1F1F1" }}>Theme</Button>
       </Box>
 
+      {/* Modal section */}
       <SignInModal
         open={openSignInModal}
         close={handleCloseSignInModal}
-        login={handleLogin}
         openRegister={handleOpenFromLogin}
+        setIsLoggedIn={setIsLoggedIn}
       />
+
       <SignUpModal
         open={openSignUpModal}
         close={handleCloseSignUpModal}
-        register={handleRegister}
         openLogin={handleOpenFromRegister}
       />
 
+      {/* Sidebar section */}
       <Box sx={{ position: "absolute" }}>
-        {isLoggedIn ? (
+        {isLoggedIn && (
           <Sidebar
-            handleSidebar={openSidebar}
-            handleLogout={handleLogout}
-            userInfo={currentUser}
+            open={handleOpenSidebar}
+            close={handleCloseSidebar}
+            handleLogoutClick={handleLogoutClick}
+            currentUser={currentUser}
           />
-        ) : (
-          <Sidebar handleSidebar={openSidebar} />
         )}
       </Box>
+
+      {/* Message section */}
       <Typography
         sx={{
           position: "absolute",

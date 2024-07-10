@@ -1,7 +1,5 @@
 "use server";
 
-import { Jwt } from "jsonwebtoken";
-import { setCookie } from "cookies-next";
 import bcrypt from "bcryptjs";
 import connectToDB from "./dbConnect";
 import UserModel from "./models";

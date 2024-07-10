@@ -1,4 +1,3 @@
-"use cluent";
 import React, { useState } from "react";
 import {
   Box,
@@ -11,10 +10,8 @@ import {
 } from "@mui/material";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 
-const Sidebar = ({ handleSidebar, handleLogout, userInfo }) => {
+const Sidebar = ({ open, close, handleLogoutClick, currentUser }) => {
   const [isExpanded, setIsExpanded] = useState(true);
-
-  if (!handleSidebar) return null;
 
   const sideMenuItems = [
     {
@@ -32,7 +29,7 @@ const Sidebar = ({ handleSidebar, handleLogout, userInfo }) => {
     {
       text: "Sign Out",
       link: "/",
-      action: handleLogout,
+      action: handleLogoutClick,
     },
   ];
 
@@ -51,10 +48,10 @@ const Sidebar = ({ handleSidebar, handleLogout, userInfo }) => {
     <Drawer
       anchor="left"
       variant="persistent"
-      open={handleSidebar}
-      onClose={handleSidebar}
-      hideBackdrop={true}
+      open={open}
+      onClose={close}
       disableScrolllock={true}
+      hideBackdrop={true}
       PaperProps={{
         sx: {
           position: "fixed",
@@ -85,10 +82,10 @@ const Sidebar = ({ handleSidebar, handleLogout, userInfo }) => {
         )}
       </IconButton>
 
-      {isExpanded && userInfo && (
+      {isExpanded && currentUser && (
         <Box sx={{ padding: "1rem", textAlign: "center" }}>
           <Typography sx={{ fontSize: "1rem", fontWeight: "600" }}>
-            Welcome, {userInfo.username}
+            Welcome, {currentUser.username}
           </Typography>
         </Box>
       )}

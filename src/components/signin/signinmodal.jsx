@@ -10,40 +10,56 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { loginUser } from "@/lib/actions";
+import { useCookies } from "react-cookie";
 
-const SignInModal = ({ open, close, login, openRegister }) => {
-  const [credentials, setCredentials] = useState({ email: "", password: "" });
+const SignInModal = ({ open, close, openRegister, setIsLoggedIn }) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [message, setMessage] = useState(null);
   const [isSuccessfull, setIsSuccessfull] = useState(false);
-
-  // Saves the data given by user for login attempt.
-  const handleUserData = (e) => {
-    const { name, value } = e.target;
-    setCredentials({ ...credentials, [name]: value });
-  };
+  const [cookies, setCookie, removeCookie] = useCookies([
+    "accessToken",
+    "refreshToken",
+    "currentUser",
+  ]);
 
   // The user logs in if successfull
   const handleLoginClick = async (e) => {
     e.preventDefault();
-    try {
-      const result = await loginUser(credentials);
 
-      if (result.success) {
+    try {
+      const response = await fetch("api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Login successfull", data.user);
+
+        const cookieOptions = { path: "/", secure: false, maxAge: 60 * 60 };
+        setMessage("You've successfully logged in!");
         setIsSuccessfull(true);
-        setMessage(result.success);
-        login(result.updatedUser);
+        setIsLoggedIn(true);
+        setCookie("accessToken", data.accessToken, cookieOptions);
+        setCookie("refreshToken", data.refreshToken, cookieOptions);
+        setCookie("currentUser", data.user, cookieOptions);
+
+        setTimeout(() => {
+          close();
+          setMessage(null);
+        }, 3000);
       } else {
-        setMessage(result.error);
+        setMessage("Invalid credentials!");
+        return;
       }
     } catch (error) {
       setMessage("Failed to login. Please try again!");
+      console.log("Login error: ", error);
     }
-
-    setTimeout(() => {
-      close();
-      setMessage(null);
-    }, 3000);
   };
 
   return (
@@ -95,8 +111,8 @@ const SignInModal = ({ open, close, login, openRegister }) => {
           type="email"
           variant="outlined"
           name="email"
-          value={credentials.email}
-          onChange={handleUserData}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
         <TextField
           margin="dense"
@@ -104,8 +120,8 @@ const SignInModal = ({ open, close, login, openRegister }) => {
           type="password"
           variant="outlined"
           name="password"
-          value={credentials.password}
-          onChange={handleUserData}
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
         />
         {!isSuccessfull ? (
           <Typography
