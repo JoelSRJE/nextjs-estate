@@ -18,15 +18,10 @@ const Navbar = () => {
   const [openSidebar, setOpenSidebar] = useState(false);
 
   useEffect(() => {
-    if (status === "loading") {
-      return <div>Loading...</div>;
-    } else if (status === "authenticated") {
+    if (status === "authenticated") {
       setIsLoggedIn(true);
-      setOpenSidebar(true);
-      console.log(openSidebar);
     } else {
       setIsLoggedIn(false);
-      setOpenSidebar(false);
     }
   }, [status]);
 
@@ -79,6 +74,15 @@ const Navbar = () => {
     setCloseSignUpModal(false);
   };
 
+  /*
+  const handleLogin = (user) => {
+    setIsLoggedIn(true);
+    setOpenSidebar(true);
+    setCurrentUser(user);
+    handleCloseSignInModal(false);
+  };
+*/
+
   const handleLogout = async () => {
     try {
       const result = await signOut();
@@ -95,13 +99,13 @@ const Navbar = () => {
     setMessage(result);
   };
 
-  const handleOpenSidebar = () => {
-    setOpenSidebar(true);
-  };
+  // const handleOpenSidebar = () => {
+  //   setOpenSidebar(true);
+  // };
 
-  const handleSidebar = () => {
-    setOpenSidebar(false);
-  };
+  // const handleSidebar = () => {
+  //   setOpenSidebar(false);
+  // };
 
   return (
     <Box
@@ -242,7 +246,11 @@ const Navbar = () => {
       {/* Sidebar section - only display if logged in */}
       <Box sx={{ position: "absolute" }}>
         {isLoggedIn && session?.user && (
-          <Sidebar handleSidebar={openSidebar} userInfo={session?.user} />
+          <Sidebar
+            handleSidebar={openSidebar}
+            handleLogout={handleLogout}
+            userInfo={session?.user}
+          />
         )}
       </Box>
 
