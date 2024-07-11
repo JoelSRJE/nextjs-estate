@@ -1,3 +1,4 @@
+/*
 "use server";
 
 import bcrypt from "bcryptjs";
@@ -88,3 +89,4 @@ export const logoutUser = async (currentUser) => {
     return { error: false, message: "An error occured while logging out" };
   }
 };
+*/

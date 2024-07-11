@@ -20,7 +20,7 @@ const Sidebar = ({ open, close, handleLogoutClick, currentUser }) => {
     },
     {
       text: "Add Property",
-      link: "/",
+      link: "/listing",
     },
     {
       text: "Create Post",
