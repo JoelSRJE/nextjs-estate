@@ -24,12 +24,14 @@ const ListingPage = () => {
         display: "flex",
         justifyContent: "center",
         backgroundColor: "#17253d",
-        height: "100vh",
+        height: "auto",
         width: "100vw",
         paddingTop: "5rem",
       }}
     >
-      <AddListing />
+      <Box sx={{ height: "auto", width: "auto" }}>
+        <AddListing />
+      </Box>
     </Box>
   );
 };

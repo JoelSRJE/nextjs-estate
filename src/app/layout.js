@@ -14,7 +14,7 @@ export default function RootLayout({ children }) {
         <ThemeProvider theme={theme}>
           <CssBaseline />
 
-          <body>
+          <body style={{ backgroundColor: "#17253d" }}>
             <Navbar />
             {children}
           </body>

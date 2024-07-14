@@ -1,25 +1,11 @@
 "use client";
 import { Box, Typography, TextField, Button } from "@mui/material";
-import { set } from "mongoose";
 import React, { useState } from "react";
-
-/* 
-Main poster
-Images
-
-Type // house, apartment etc.
-Floor // våning
-
-size //kvadratmeter
-rooms // antalet rum
-
-Created // datum skapelse Auto i fyllt i databasen?
-price // hyran
-*/
+import { FaRegTrashCan } from "react-icons/fa6";
 
 const AddListing = () => {
-  const [mainPoster, setMainPoster] = useState("");
-  const [images, setImages] = useState("");
+  const [poster, setPoster] = useState(null);
+  const [images, setImages] = useState([]);
   const [city, setCity] = useState("");
   const [address, setAddress] = useState("");
   const [zip, setZip] = useState("");
@@ -30,8 +16,8 @@ const AddListing = () => {
   const [price, setPrice] = useState("");
 
   const clearFields = () => {
-    setMainPoster("");
-    setImages("");
+    setPoster(null);
+    setImages([]);
     setCity("");
     setAddress("");
     setZip("");
@@ -42,17 +28,77 @@ const AddListing = () => {
     setPrice("");
   };
 
+  const handlePosterChange = (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (file) {
+      setPoster(file);
+    }
+  };
+
+  const handleImagesChange = (e) => {
+    const files = Array.from(e.target.files);
+    setImages([...images, ...files]);
+  };
+
+  const removeImage = (idx) => {
+    const newImages = [...images];
+    newImages.splice(idx, 1);
+    setImages(newImages);
+  };
+
+  const createListing = async (e) => {
+    e.preventDefault();
+
+    try {
+      const data = {
+        poster: poster,
+        images: images,
+        city: city,
+        address: address,
+        zip: zip,
+        type: type,
+        floor: floor,
+        size: size,
+        rooms: rooms,
+        price: price,
+      };
+
+      console.log("Data: ", data);
+
+      const response = await fetch("api/addListing", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      const result = await response.text();
+      console.log("Response text: ", result);
+
+      if (response.ok) {
+        clearFields();
+        console.log("Property registered: ", result);
+      } else {
+        console.log("Property failed: ", result);
+      }
+    } catch (error) {
+      console.error("Property error: ", error);
+    }
+  };
+
   return (
     <Box
       sx={{
         display: "flex",
         flexDirection: "column",
-        height: "41.5rem",
+        height: "auto",
         width: "61.5rem",
         backgroundColor: "#F1F1F1",
         borderRadius: "1rem",
         padding: "1.5rem",
         marginTop: "2rem",
+        marginBottom: "2rem",
       }}
     >
       <Typography
@@ -83,17 +129,60 @@ const AddListing = () => {
           }}
         >
           <Typography>Poster image</Typography>
+          {poster && (
+            <img
+              src={URL.createObjectURL(poster)}
+              alt="Poster Preview"
+              style={{ width: "8rem", height: "8rem" }}
+            />
+          )}
           <TextField
             margin="dense"
             type="file"
             variant="outlined"
             name="poster"
-            value={mainPoster}
-            onChange={(e) => setMainPoster(e.target.value)}
-            sx={{ marginBottom: "8rem" }}
+            onChange={handlePosterChange}
+            // sx={{ marginBottom: "8rem" }}
           />
 
           <Typography>Images</Typography>
+          <Box sx={{ display: "flex", flexdirection: "row", flexWrap: "wrap" }}>
+            {images.map((image, idx) => (
+              <Box
+                sx={{
+                  position: "relative",
+                  width: "8rem",
+                  height: "8rem",
+                }}
+              >
+                <img
+                  key={idx}
+                  src={URL.createObjectURL(image)}
+                  alt={`Image ${idx}`}
+                  style={{ width: "8rem", height: "8rem" }}
+                />
+                <Button
+                  onClick={() => removeImage(idx)}
+                  sx={{
+                    position: "absolute",
+                    top: "2px",
+                    left: "2px",
+                    maxWidth: "1rem",
+                    height: "2rem",
+                    backgroundColor: "rgba(255,255,255,0.7)",
+                    color: "gray",
+                    "&:hover": {
+                      color: "crimson",
+                      backgroundColor: "rgba(255,255,255,0.7)",
+                    },
+                  }}
+                >
+                  <FaRegTrashCan />
+                </Button>
+              </Box>
+            ))}
+          </Box>
+
           <TextField
             margin="dense"
             type="file"
@@ -102,8 +191,7 @@ const AddListing = () => {
             inputProps={{
               multiple: true,
             }}
-            value={images}
-            onChange={(e) => setImages(e.target.value)}
+            onChange={handleImagesChange}
           />
         </Box>
 
@@ -112,6 +200,7 @@ const AddListing = () => {
           sx={{
             display: "flex",
             flexWrap: "wrap",
+            maxHeight: "30rem",
             gap: "1rem",
             width: "30rem",
             marginTop: "3rem",
@@ -226,7 +315,9 @@ const AddListing = () => {
         <Button sx={{ padding: "0.5rem" }} onClick={clearFields}>
           Clear fields
         </Button>
-        <Button sx={{ padding: "0.5rem" }}>Create listing</Button>
+        <Button sx={{ padding: "0.5rem" }} onClick={createListing}>
+          Create listing
+        </Button>
       </Box>
     </Box>
   );
