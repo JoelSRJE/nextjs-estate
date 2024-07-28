@@ -1,12 +1,12 @@
-"use client";
+import React, { useState, useEffect } from "react";
 import { Box, Typography, Button } from "@mui/material";
-import React, { useState } from "react";
-import Logo from "/public/images/Logo/Logo.png";
 import Image from "next/image";
+import Logo from "/public/images/Logo/Logo.png";
 import SignInModal from "../signin/signinmodal";
 import Sidebar from "./sidebar/sidebar";
 import SignUpModal from "../register/signupmodal";
-import { logoutUser } from "@/lib/actions";
+import { useCookies } from "react-cookie";
+import { logoutUser } from "@/lib/auth/authServies";
 
 const Navbar = () => {
   const [openSignUpModal, setOpenSignUpModal] = useState(false);
@@ -15,6 +15,35 @@ const Navbar = () => {
   const [openSidebar, setOpenSidebar] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [message, setMessage] = useState(null);
+
+  const [cookies, setCookie, removeCookie] = useCookies([
+    "accessToken",
+    "currentUser",
+  ]);
+
+  useEffect(() => {
+    console.log("Cookies:", cookies);
+    console.log("Current user cookie:", cookies.currentUser);
+
+    if (cookies.accessToken) {
+      setIsLoggedIn(true);
+      setOpenSidebar(true);
+
+      if (typeof cookies.currentUser === "string") {
+        try {
+          const user = JSON.parse(cookies.currentUser);
+          setCurrentUser(user);
+        } catch (error) {
+          console.error("Error parsing currentUser cookie:", error);
+          setCurrentUser(null);
+        }
+      } else {
+        setCurrentUser(cookies.currentUser);
+      }
+    } else {
+      setIsLoggedIn(false);
+    }
+  }, [cookies.accessToken, cookies.currentUser]);
 
   const navOptions = [
     {
@@ -35,21 +64,12 @@ const Navbar = () => {
     },
   ];
 
-  const handleOpenSignInModal = () => {
-    setOpenSignInModal(true);
-  };
+  const handleOpenSignInModal = () => setOpenSignInModal(true);
 
-  const handleCloseSignInModal = () => {
-    setOpenSignInModal(false);
-  };
+  const handleCloseSignInModal = () => setOpenSignInModal(false);
 
-  const handleOpenSignUpModal = () => {
-    setOpenSignUpModal(true);
-  };
-
-  const handleCloseSignUpModal = () => {
-    setOpenSignUpModal(false);
-  };
+  const handleOpenSignUpModal = () => setOpenSignUpModal(true);
+  const handleCloseSignUpModal = () => setOpenSignUpModal(false);
 
   const handleOpenFromRegister = () => {
     setOpenSignUpModal(false);
@@ -61,31 +81,30 @@ const Navbar = () => {
     setOpenSignUpModal(true);
   };
 
-  const handleRegister = () => {
-    setCloseSignUpModal(false);
+  const handleRegister = (user) => {
+    setIsLoggedIn(true);
+    setOpenSidebar(true);
+    setCurrentUser(user);
+    handleCloseSignUpModal();
   };
 
   const handleLogin = (user) => {
     setIsLoggedIn(true);
     setOpenSidebar(true);
     setCurrentUser(user);
-    handleCloseSignInModal(false);
+    handleCloseSignInModal();
   };
 
   const handleLogout = async () => {
     try {
-      const result = await logoutUser(currentUser);
-      if (result.success) {
-        setIsLoggedIn(false);
-        setOpenSidebar(false);
-        setCurrentUser(null);
-        displayStatusMessage(result.message);
-        setTimeout(() => {
-          displayStatusMessage(null);
-        }, 4000);
-      } else {
-        displayStatusMessage(result.message);
-      }
+      await logoutUser();
+      removeCookie("accessToken", { path: "/" });
+      removeCookie("currentUser", { path: "/" });
+      setIsLoggedIn(false);
+      setOpenSidebar(false);
+      setCurrentUser(null);
+      displayStatusMessage("User logged out successfully!");
+      setTimeout(() => displayStatusMessage(null), 4000);
     } catch (error) {
       displayStatusMessage("An error occurred while logging out");
       console.error("Logout error:", error);

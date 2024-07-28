@@ -88,7 +88,7 @@ const Sidebar = ({ handleSidebar, handleLogout, userInfo }) => {
       {isExpanded && userInfo && (
         <Box sx={{ padding: "1rem", textAlign: "center" }}>
           <Typography sx={{ fontSize: "1rem", fontWeight: "600" }}>
-            Welcome, {userInfo.username}
+            Welcome, {userInfo.displayName}
           </Typography>
         </Box>
       )}

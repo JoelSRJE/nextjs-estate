@@ -1,3 +1,4 @@
+/*
 "use server";
 
 import { Jwt } from "jsonwebtoken";
@@ -90,3 +91,4 @@ export const logoutUser = async (currentUser) => {
     return { error: false, message: "An error occured while logging out" };
   }
 };
+*/

@@ -1,3 +1,4 @@
+/*
 import mongoose, { Schema } from "mongoose";
 import bcrypt from "bcryptjs";
 
@@ -42,3 +43,5 @@ userSchema.methods.matchPassword = async function (enteredPassword) {
 const UserModel = mongoose.models.User || mongoose.model("User", userSchema);
 
 export default UserModel;
+
+*/
