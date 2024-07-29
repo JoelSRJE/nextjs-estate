@@ -33,8 +33,14 @@ const SignInModal = ({ open, close, login, openRegister }) => {
       console.log("User: ", user);
       console.log("Token: ", token);
 
-      setCookie("accessToken", token, { path: "/" });
-      setCookie("currentUser", JSON.stringify(user), { path: "/" });
+      setCookie("accessToken", token, { path: "/", maxAge: 60 * 60 });
+      setCookie("currentUser", JSON.stringify(user), {
+        path: "/",
+        maxAge: 60 * 60,
+      });
+
+      console.log("Cookies: ", cookies);
+
       setIsSuccessfull(true);
       setMessage("Logged in successfully!");
       login(user);

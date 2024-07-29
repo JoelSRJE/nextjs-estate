@@ -19,6 +19,7 @@ const SignUpModal = ({ open, close, openLogin }) => {
 
   const [message, setMessage] = useState(null);
   const [isSuccessfull, setIsSuccessfull] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Registers a new user if successfull.
   const handleRegisterClick = async (e) => {
@@ -29,26 +30,25 @@ const SignUpModal = ({ open, close, openLogin }) => {
       return;
     }
 
+    setIsLoading(true);
     try {
-      const registeredUser = await registerUser(email, password);
+      const registeredUser = await registerUser(email, password, displayName);
       console.log("Registered User: ", registeredUser);
-      setIsSuccessfull(true);
+      setIsSuccessful(true);
       setMessage("Your account has been registered!");
       setTimeout(() => {
         close();
         setMessage(null);
+        setDisplayName("");
+        setEmail("");
+        setPassword("");
       }, 3000);
     } catch (error) {
       setIsSuccessfull(false);
       setMessage(error.message);
     }
-    setDisplayName("");
-    setEmail("");
-    setPassword("");
-    setTimeout(() => {
-      close();
-      setMessage(null);
-    }, 3000);
+
+    setIsLoading(false);
   };
 
   return (

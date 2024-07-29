@@ -9,10 +9,12 @@ const ListingPage = () => {
   const [cookies] = useCookies(["accessToken"]);
 
   useEffect(() => {
+    console.log("Cookies in useEffect: ", cookies);
+
     if (!cookies.accessToken) {
       redirect("/");
     }
-  }, [cookies.accessToken, redirect]);
+  }, [cookies.accessToken]);
 
   if (!cookies.accessToken) {
     return null;
@@ -29,9 +31,9 @@ const ListingPage = () => {
         paddingTop: "5rem",
       }}
     >
-      <Box sx={{ height: "auto", width: "auto" }}>
-        <AddListing />
-      </Box>
+      {/* <Box sx={{ height: "auto", width: "auto" }}> */}
+      <AddListing />
+      {/* </Box> */}
     </Box>
   );
 };

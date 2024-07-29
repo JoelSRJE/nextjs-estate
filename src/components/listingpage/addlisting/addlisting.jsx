@@ -1,7 +1,10 @@
 "use client";
-import { Box, Typography, TextField, Button } from "@mui/material";
 import React, { useState } from "react";
+import { Box, Typography, TextField, Button } from "@mui/material";
 import { FaRegTrashCan } from "react-icons/fa6";
+import { db, storage } from "@/lib/firebaseConfig";
+import { collection, addDoc } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const AddListing = () => {
   const [poster, setPoster] = useState(null);
@@ -50,6 +53,23 @@ const AddListing = () => {
     e.preventDefault();
 
     try {
+      // Ladda upp poster image till Firebase Storage
+      let posterURL = "";
+      if (poster) {
+        const posterRef = ref(storage, `posters/${poster.name}`);
+        const posterSnapshot = await uploadBytes(posterRef, poster);
+        posterURL = await getDownloadURL(posterSnapshot.ref);
+      }
+
+      // Ladda upp images till Firebase Storage
+      const imageUrls = [];
+      for (const image of images) {
+        const imageRef = ref(storage, `images/${image.name}`);
+        const imageSnapshot = await uploadBytes(imageRef, image);
+        const imageUrl = await getDownloadURL(imageSnapshot.ref);
+        imageUrls.push(imageUrl);
+      }
+
       const data = {
         poster: poster,
         images: images,
@@ -63,27 +83,12 @@ const AddListing = () => {
         price: price,
       };
 
-      console.log("Data: ", data);
+      await addDoc(collection(db, "properties"), data);
+      console.log("Property created successfully!");
 
-      const response = await fetch("api/addListing", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-
-      const result = await response.text();
-      console.log("Response text: ", result);
-
-      if (response.ok) {
-        clearFields();
-        console.log("Property registered: ", result);
-      } else {
-        console.log("Property failed: ", result);
-      }
+      clearFields();
     } catch (error) {
-      console.error("Property error: ", error);
+      console.error("Error creating property: ", error);
     }
   };
 
@@ -149,6 +154,7 @@ const AddListing = () => {
           <Box sx={{ display: "flex", flexdirection: "row", flexWrap: "wrap" }}>
             {images.map((image, idx) => (
               <Box
+                key={idx}
                 sx={{
                   position: "relative",
                   width: "8rem",
@@ -156,7 +162,6 @@ const AddListing = () => {
                 }}
               >
                 <img
-                  key={idx}
                   src={URL.createObjectURL(image)}
                   alt={`Image ${idx}`}
                   style={{ width: "8rem", height: "8rem" }}

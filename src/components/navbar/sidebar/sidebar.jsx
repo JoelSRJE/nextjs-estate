@@ -1,4 +1,4 @@
-"use cluent";
+"use client";
 import React, { useState } from "react";
 import {
   Box,
@@ -23,7 +23,7 @@ const Sidebar = ({ handleSidebar, handleLogout, userInfo }) => {
     },
     {
       text: "Add Property",
-      link: "/",
+      link: "/listing",
     },
     {
       text: "Create Post",
