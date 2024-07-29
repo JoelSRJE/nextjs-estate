@@ -34,7 +34,7 @@ const SignUpModal = ({ open, close, openLogin }) => {
     try {
       const registeredUser = await registerUser(email, password, displayName);
       console.log("Registered User: ", registeredUser);
-      setIsSuccessful(true);
+      setIsSuccessfull(true);
       setMessage("Your account has been registered!");
       setTimeout(() => {
         close();

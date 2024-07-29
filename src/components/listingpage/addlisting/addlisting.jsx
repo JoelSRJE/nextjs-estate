@@ -71,8 +71,8 @@ const AddListing = () => {
       }
 
       const data = {
-        poster: poster,
-        images: images,
+        poster: posterURL,
+        images: imageUrls,
         city: city,
         address: address,
         zip: zip,

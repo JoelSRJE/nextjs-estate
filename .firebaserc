@@ -1,0 +1,9 @@
+{
+  "projects": {
+    "test": "estate-4f315",
+    "default": "estate-4f315"
+  },
+  "targets": {},
+  "etags": {},
+  "dataconnectEmulatorConfig": {}
+}

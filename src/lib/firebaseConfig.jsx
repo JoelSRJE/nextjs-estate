@@ -4,12 +4,12 @@ import { getStorage } from "firebase/storage";
 import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCJu_R5FgLH2yhZ2zQdNTXU47fhp0EUCEM",
-  authDomain: "testing-c09f1.firebaseapp.com",
-  projectId: "testing-c09f1",
-  storageBucket: "testing-c09f1.appspot.com",
-  messagingSenderId: "357176149975",
-  appId: "1:357176149975:web:a9cd2d6a0cb944042bed92",
+  apiKey: "AIzaSyBHNjbdApfSLuuxiGw7Mc3cz1hnVr_snbM",
+  authDomain: "estate-4f315.firebaseapp.com",
+  projectId: "estate-4f315",
+  storageBucket: "estate-4f315.appspot.com",
+  messagingSenderId: "570690684041",
+  appId: "1:570690684041:web:69e538197d85064e997258",
 };
 
 // console.log("Initializing Firebase app...");
