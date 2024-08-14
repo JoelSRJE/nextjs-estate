@@ -66,7 +66,6 @@ const Navbar = () => {
   ];
 
   const handleOpenSignInModal = () => setOpenSignInModal(true);
-
   const handleCloseSignInModal = () => setOpenSignInModal(false);
 
   const handleOpenSignUpModal = () => setOpenSignUpModal(true);
@@ -252,6 +251,7 @@ const Navbar = () => {
         login={handleLogin}
         openRegister={handleOpenFromLogin}
       />
+
       <SignUpModal
         open={openSignUpModal}
         close={handleCloseSignUpModal}
