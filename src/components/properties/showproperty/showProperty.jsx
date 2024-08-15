@@ -64,9 +64,10 @@ export const ShowProperty = ({ open, close, selectedObject }) => {
             flex: "1",
             display: "flex",
             flexDirection: "column",
-            maxHeight: "45rem",
+            maxHeight: "46rem",
             maxWidth: "50rem",
             borderRight: "1px solid rgba(170, 200, 200, 0.7)",
+            borderLeft: "1px solid rgba(170,200,200,0.7)",
             borderRadius: "2rem",
           }}
         >
@@ -105,10 +106,13 @@ export const ShowProperty = ({ open, close, selectedObject }) => {
             maxWidth: "50rem",
             color: "#FFF",
             borderLeft: "1px solid rgba(170, 200, 200, 0.7)",
+            borderRight: "1px solid rgba(170,200,200, 0.7)",
             borderRadius: "2rem",
           }}
         >
-          <Typography sx={{ fontSize: "1.5rem", fontWeight: "600" }}>
+          <Typography
+            sx={{ fontSize: "1.5rem", fontWeight: "600", marginBottom: "2rem" }}
+          >
             {selectedObject.type}
           </Typography>
 
@@ -121,35 +125,63 @@ export const ShowProperty = ({ open, close, selectedObject }) => {
               maxWidth: "40rem",
             }}
           >
-            <Typography sx={{ fontSize: "1.4rem", width: "19rem" }}>
+            <Typography
+              sx={{
+                fontSize: "1.4rem",
+                width: "19rem",
+                padding: "0.2rem",
+              }}
+            >
               Address: {selectedObject.address}
             </Typography>
-            <Typography sx={{ fontSize: "1.4rem", width: "19rem" }}>
+            <Typography
+              sx={{ fontSize: "1.4rem", width: "19rem", padding: "0.2rem" }}
+            >
               City: {selectedObject.city}
             </Typography>
-            <Typography sx={{ fontSize: "1.4rem", width: "19rem" }}>
+            <Typography
+              sx={{ fontSize: "1.4rem", width: "19rem", padding: "0.2rem" }}
+            >
               Floor: {selectedObject.floor}
             </Typography>
-            <Typography sx={{ fontSize: "1.4rem", width: "19rem" }}>
+            <Typography
+              sx={{ fontSize: "1.4rem", width: "19rem", padding: "0.2rem" }}
+            >
               Size: {selectedObject.size}
             </Typography>
-            <Typography sx={{ fontSize: "1.4rem", width: "19rem" }}>
+            <Typography
+              sx={{ fontSize: "1.4rem", width: "19rem", padding: "0.2rem" }}
+            >
               Zip: {selectedObject.zip}
             </Typography>
-            <Typography sx={{ fontSize: "1.4rem", width: "19rem" }}>
+            <Typography
+              sx={{ fontSize: "1.4rem", width: "19rem", padding: "0.2rem" }}
+            >
               Price: {selectedObject.price} kr/month
             </Typography>
           </Box>
+
           <Divider
             sx={{
-              marginTop: "1rem",
+              marginTop: "2rem",
               marginBottom: "1rem",
-              width: "80%",
+              width: "90%",
               color: "#FFF",
+              "&::before, &::after": {
+                borderColor: "#FFF",
+              },
             }}
           >
             <Typography sx={{ fontSize: "1.4rem" }}>Contact</Typography>
           </Divider>
+
+          <Typography
+            sx={{ fontSize: "1.1rem", marginBottom: "2rem", width: "30rem" }}
+          >
+            If you're interested, please fill out your information below, and
+            we'll get back to you within 2-3 working days.
+          </Typography>
+
           <Box
             sx={{
               display: "flex",
@@ -164,39 +196,101 @@ export const ShowProperty = ({ open, close, selectedObject }) => {
                 flexDirection: "column",
                 gap: "1rem",
                 alignItems: "center",
-                width: "30rem",
+                width: "40rem",
               }}
             >
-              <Box sx={{ width: "auto" }}>
-                <Typography>Name</Typography>
-                <TextField
-                  type="text"
-                  label="Name"
-                  variant="outlined"
-                  sx={{ color: "#FFF", width: "80%" }}
-                />
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  gap: "2rem",
+                  width: "40rem",
+                }}
+              >
+                <Box>
+                  <TextField
+                    type="text"
+                    label="Name"
+                    variant="outlined"
+                    sx={{
+                      width: "15rem",
+                      "& label": { color: "#FFF" },
+                      "& .MuiInputBase-input": { color: "#FFF" },
+                      "& .MuiOutlinedInput-root": {
+                        "& fieldset": {
+                          borderColor: "#FFF",
+                        },
+                        "&:hover fieldset": {
+                          borderColor: "rgba(41, 73, 128, 0.8)",
+                        },
+                        "&.Mui-focused fieldset": {
+                          borderColor: "#FFF",
+                        },
+                      },
+                    }}
+                  />
+                </Box>
+
+                <Box>
+                  <TextField
+                    type="email"
+                    label="Email"
+                    sx={{
+                      width: "15rem",
+                      "& label": { color: "#FFF" },
+                      "& .MuiInputBase-input": { color: "#FFF" },
+                      "& .MuiOutlinedInput-root": {
+                        "& fieldset": {
+                          borderColor: "#FFF",
+                        },
+                        "&:hover fieldset": {
+                          borderColor: "rgba(41, 73, 128, 0.8)",
+                        },
+                        "&.Mui-focused fieldset": {
+                          borderColor: "#FFF",
+                        },
+                      },
+                    }}
+                  />
+                </Box>
               </Box>
 
               <Box>
-                <Typography>Email</Typography>
-                <TextField
-                  type="email"
-                  label="Email"
-                  sx={{ color: "#FFF", width: "80%" }}
-                />
-              </Box>
-
-              <Box>
-                <Typography>Message</Typography>
                 <TextField
                   label="Write your message here.."
                   type="textarea"
                   multiline
                   rows={4}
-                  sx={{ color: "#FFF", width: "100%" }}
+                  sx={{
+                    width: "32rem",
+                    "& label": { color: "#FFF" },
+                    "& .MuiInputBase-input": { color: "#FFF" },
+                    "& .MuiOutlinedInput-root": {
+                      "& fieldset": {
+                        borderColor: "#FFF",
+                      },
+                      "&:hover fieldset": {
+                        borderColor: "rgba(41, 73, 128, 0.8)",
+                      },
+                      "&.Mui-focused fieldset": {
+                        borderColor: "#FFF",
+                      },
+                    },
+                  }}
                 />
               </Box>
             </Box>
+            <Button
+              sx={{
+                color: "#FFF",
+                border: "1px solid #FFF",
+                "&:hover": {
+                  border: "1px solid rgba(41, 73, 128, 0.8)",
+                },
+              }}
+            >
+              Send
+            </Button>
           </Box>
         </Box>
       </Box>
