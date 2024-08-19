@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useState } from "react";
 import {
   Box,
   Typography,
@@ -6,13 +6,40 @@ import {
   Dialog,
   Divider,
   TextField,
-  TextareaAutosize,
 } from "@mui/material";
-import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 import ImageSlider from "../slider/imageslider";
 
 export const ShowProperty = ({ open, close, selectedObject }) => {
   if (!selectedObject) return null;
+
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+  const [isSuccessfull, setIsSuccessfull] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const sendMessage = async () => {
+    if (!name || !email || !message) {
+      setErrorMessage("All fields are required!");
+      return;
+    }
+
+    try {
+      console.log("Name: ", name);
+      console.log("Email: ", email);
+      console.log("Message: ", message);
+
+      setIsSuccessfull(true);
+      setName("");
+      setEmail("");
+      setMessage("");
+      setErrorMessage(
+        "Message sent, we'll be in touch with you within a few days!"
+      );
+    } catch (error) {
+      setErrorMessage("Failed to send message. Please try again later.");
+    }
+  };
 
   // console.log("selectedObject in modal: ", selectedObject);
 
@@ -46,6 +73,9 @@ export const ShowProperty = ({ open, close, selectedObject }) => {
         onClick={close}
         sx={{
           width: "1rem",
+          marginBottom: "1rem",
+          color: "#FFF",
+          fontSize: "1rem",
         }}
       >
         X
@@ -66,8 +96,6 @@ export const ShowProperty = ({ open, close, selectedObject }) => {
             flexDirection: "column",
             maxHeight: "46rem",
             maxWidth: "50rem",
-            borderRight: "1px solid rgba(170, 200, 200, 0.7)",
-            borderLeft: "1px solid rgba(170,200,200,0.7)",
             borderRadius: "2rem",
           }}
         >
@@ -105,8 +133,6 @@ export const ShowProperty = ({ open, close, selectedObject }) => {
             flex: "1",
             maxWidth: "50rem",
             color: "#FFF",
-            borderLeft: "1px solid rgba(170, 200, 200, 0.7)",
-            borderRight: "1px solid rgba(170,200,200, 0.7)",
             borderRadius: "2rem",
           }}
         >
@@ -212,6 +238,8 @@ export const ShowProperty = ({ open, close, selectedObject }) => {
                     type="text"
                     label="Name"
                     variant="outlined"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                     sx={{
                       width: "15rem",
                       "& label": { color: "#FFF" },
@@ -235,6 +263,8 @@ export const ShowProperty = ({ open, close, selectedObject }) => {
                   <TextField
                     type="email"
                     label="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     sx={{
                       width: "15rem",
                       "& label": { color: "#FFF" },
@@ -261,6 +291,8 @@ export const ShowProperty = ({ open, close, selectedObject }) => {
                   type="textarea"
                   multiline
                   rows={4}
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
                   sx={{
                     width: "32rem",
                     "& label": { color: "#FFF" },
@@ -281,6 +313,7 @@ export const ShowProperty = ({ open, close, selectedObject }) => {
               </Box>
             </Box>
             <Button
+              onClick={sendMessage}
               sx={{
                 color: "#FFF",
                 border: "1px solid #FFF",
@@ -291,6 +324,7 @@ export const ShowProperty = ({ open, close, selectedObject }) => {
             >
               Send
             </Button>
+            <Typography>{errorMessage}</Typography>
           </Box>
         </Box>
       </Box>

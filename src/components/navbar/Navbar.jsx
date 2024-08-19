@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Box, Typography, Button } from "@mui/material";
+import { Box, Typography, Button, TextField } from "@mui/material";
 import Image from "next/image";
 import Logo from "/public/images/Logo/Logo.png";
 import SignInModal from "../signin/signinmodal";
@@ -194,6 +194,7 @@ const Navbar = () => {
           </Button>
         ))}
       </Box>
+
       <Box sx={{ display: "flex", alignItems: "center" }}>
         {!isLoggedIn ? (
           <Box>

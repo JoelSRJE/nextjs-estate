@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardActionArea,
@@ -10,27 +10,25 @@ import {
 } from "@mui/material";
 
 export const PropertyCard = ({ property }) => {
-  // console.log("Property from parent: ", property);
-
   return (
     <Card
       sx={{
         display: "flex",
         flexDirection: "column",
-        height: "16rem",
+        height: "15rem",
         width: "16rem",
         borderRadius: "0.5rem",
         boxShadow: "5",
         transition: "0.3s ease",
         // #17253d
         backgroundColor: "#283e63",
-        "&:hover": { scale: "1.03" },
+        "&:hover": { scale: "1.05" },
       }}
     >
       <CardActionArea>
         <CardMedia
           component="img"
-          image={property.images[1]}
+          image={property.images[0]}
           alt="property image"
           sx={{
             objectFit: "fill",
@@ -39,10 +37,18 @@ export const PropertyCard = ({ property }) => {
           }}
         />
         <CardContent sx={{ color: "#FFF" }}>
-          <Typography sx={{ fontSize: "1.1rem", fontWeight: "600" }}>
+          <Typography
+            sx={{
+              fontSize: "1.1rem",
+              fontWeight: "600",
+              marginBottom: "0.2rem",
+            }}
+          >
             {property.address} {property.city}
           </Typography>
-          <Typography sx={{ fontSize: "1.2rem" }}>{property.zip}</Typography>
+          <Typography sx={{ fontSize: "1.2rem" }}>
+            {property.price} kr/month
+          </Typography>
         </CardContent>
       </CardActionArea>
     </Card>
