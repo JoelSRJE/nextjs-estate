@@ -13,6 +13,7 @@ const Properties = () => {
   const [selectedObject, setSelectedObject] = useState(null);
   const [openProductModal, setOpenProductModal] = useState(false);
   const [searchInput, setSearchInput] = useState("");
+  const [switchButton, setSwitchButton] = useState(false);
 
   useEffect(() => {
     const fetchProperties = async () => {
@@ -33,7 +34,7 @@ const Properties = () => {
       if (searchInput.trim() === "") {
         setProperties(allProperties);
       } else {
-        filteredProperties = allProperties.filter((property) =>
+        const filteredProperties = allProperties.filter((property) =>
           property.address.toLowerCase().includes(searchInput.toLowerCase())
         );
 
@@ -42,6 +43,19 @@ const Properties = () => {
     } catch (error) {
       console.log("Error: ", error);
     }
+  };
+
+  const filterPropertyTypes = (type) => {
+    const filteredProperties = allProperties.filter(
+      (property) => property.type === type
+    );
+    setProperties(filteredProperties);
+  };
+
+  const handleSwitchButton = () => {
+    setSwitchButton(!switchButton);
+    const selectedType = switchButton ? "Apartment" : "Commercial";
+    filterPropertyTypes(selectedType);
   };
 
   const handlePropertyClick = (property) => {
@@ -94,7 +108,15 @@ const Properties = () => {
             </Typography>
           </Box>
 
-          <Box>
+          <Box sx={{ display: "flex", flexDirection: "row" }}>
+            <Typography>Type: </Typography>
+            <Button
+              onClick={handleSwitchButton}
+              sx={{ marginRight: "2rem", color: "#FFF" }}
+            >
+              {switchButton ? "Commercial" : "Residential"}
+            </Button>
+
             <TextField
               type="text"
               variant="outlined"
