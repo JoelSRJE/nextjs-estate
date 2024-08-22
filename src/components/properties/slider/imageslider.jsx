@@ -51,12 +51,12 @@ const ImageSlider = ({ selectedObject }) => {
           width: "2rem",
           height: "4rem",
           color: "#FFF",
-          border: "1px solid rgba(170, 200, 200, 0.8)",
+          border: "1px solid #d98324",
           position: "relative",
           left: "-2rem",
           transition: "transform 0.1s ease-in",
           "&:hover": {
-            border: "1px solid rgba(170, 200, 200, 0.2)",
+            border: "1px solid #d98324",
             transform: "scale(1.1)",
           },
         }}
@@ -68,7 +68,7 @@ const ImageSlider = ({ selectedObject }) => {
           display: "flex",
           overflow: "hidden",
           width: "35rem",
-          border: "1px solid silver",
+          border: "1px solid #d98324",
           justifyContent: "center",
           borderRadius: "0.5rem",
         }}
@@ -93,12 +93,12 @@ const ImageSlider = ({ selectedObject }) => {
           width: "2rem",
           height: "4rem",
           color: "#FFF",
-          border: "1px solid rgba(170, 200, 200, 0.8)",
+          border: "1px solid #d98324",
           position: "relative",
           right: "-2rem",
           transition: "transform 0.1s ease-in",
           "&:hover": {
-            border: "1px solid rgba(170, 200, 200, 0.2)",
+            border: "1px solid #d98324",
             transform: "scale(1.1)",
           },
         }}

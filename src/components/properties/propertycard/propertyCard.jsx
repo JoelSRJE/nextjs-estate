@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import {
   Card,
   CardActionArea,
   CardContent,
   CardMedia,
   Typography,
+  Box,
 } from "@mui/material";
 
 export const PropertyCard = ({ property }) => {
@@ -33,7 +34,7 @@ export const PropertyCard = ({ property }) => {
           sx={{
             objectFit: "fill",
             height: "10rem",
-            borderBottom: "1px solid silver",
+            borderBottom: "1px solid #d98324",
           }}
         />
         <CardContent sx={{ color: "#FFF" }}>
@@ -44,10 +45,24 @@ export const PropertyCard = ({ property }) => {
               marginBottom: "0.2rem",
             }}
           >
-            {property.address} {property.city}
-          </Typography>
-          <Typography sx={{ fontSize: "1.2rem" }}>
-            {property.price} kr/month
+            {property.address}
+            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+              <Typography
+                sx={{
+                  fontSize: "1.2rem",
+                }}
+              >
+                {property.city}
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: "1.2rem",
+                  borderBottom: "1px solid #d98324",
+                }}
+              >
+                {property.price}kr/month
+              </Typography>
+            </Box>
           </Typography>
         </CardContent>
       </CardActionArea>

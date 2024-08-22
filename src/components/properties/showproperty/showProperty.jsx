@@ -106,7 +106,7 @@ export const ShowProperty = ({ open, close, selectedObject }) => {
               style={{
                 maxWidth: "35rem",
                 height: "auto",
-                border: "2px solid silver",
+                border: "2px solid #d98324",
                 borderRadius: "0.5rem",
               }}
             />
@@ -137,7 +137,12 @@ export const ShowProperty = ({ open, close, selectedObject }) => {
           }}
         >
           <Typography
-            sx={{ fontSize: "1.5rem", fontWeight: "600", marginBottom: "2rem" }}
+            sx={{
+              fontSize: "1.5rem",
+              fontWeight: "600",
+              marginBottom: "2rem",
+              borderBottom: "1px solid #d98324",
+            }}
           >
             {selectedObject.type}
           </Typography>
@@ -194,7 +199,7 @@ export const ShowProperty = ({ open, close, selectedObject }) => {
               width: "90%",
               color: "#FFF",
               "&::before, &::after": {
-                borderColor: "#FFF",
+                borderColor: "#d98324",
               },
             }}
           >
@@ -316,7 +321,7 @@ export const ShowProperty = ({ open, close, selectedObject }) => {
               onClick={sendMessage}
               sx={{
                 color: "#FFF",
-                border: "1px solid #FFF",
+                border: "1px solid #d98324",
                 "&:hover": {
                   border: "1px solid rgba(41, 73, 128, 0.8)",
                 },

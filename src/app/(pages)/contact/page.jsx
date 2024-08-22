@@ -1,5 +1,6 @@
 import React from "react";
 import { Box } from "@mui/material";
+import ContactForm from "@/components/contact/contactform/contactform";
 
 const Contact = () => {
   return (
@@ -13,7 +14,7 @@ const Contact = () => {
         justifyContent: "center",
       }}
     >
-      Contact
+      <ContactForm />
     </Box>
   );
 };

@@ -109,10 +109,24 @@ const Properties = () => {
           </Box>
 
           <Box sx={{ display: "flex", flexDirection: "row" }}>
-            <Typography>Type: </Typography>
+            <Typography
+              sx={{
+                position: "relative",
+                top: "0.3rem",
+                color: "#FFF",
+                fontSize: "1.1rem",
+                fontWeight: "600",
+              }}
+            >
+              Type:
+            </Typography>
             <Button
               onClick={handleSwitchButton}
-              sx={{ marginRight: "2rem", color: "#FFF" }}
+              sx={{
+                marginLeft: "1rem",
+                marginRight: "1rem",
+                color: "#FFF",
+              }}
             >
               {switchButton ? "Commercial" : "Residential"}
             </Button>
