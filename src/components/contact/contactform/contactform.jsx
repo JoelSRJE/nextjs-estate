@@ -1,7 +1,40 @@
+"use client";
 import { Box, Button, TextField, Typography } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 
 const ContactForm = () => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [message, setMessage] = useState("");
+  const [isSuccessfull, setIsSuccessfull] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const sendMessage = async () => {
+    if (!name || !email || !phoneNumber || !message) {
+      setErrorMessage("All fields are required!");
+      return;
+    }
+
+    try {
+      console.log("Name: ", name);
+      console.log("Email: ", email);
+      console.log("Phone number: ", phoneNumber);
+      console.log("Message: ", message);
+
+      setIsSuccessfull(true);
+      setName("");
+      setEmail("");
+      setPhoneNumber("");
+      setMessage("");
+      setErrorMessage(
+        "Message sent, we'll be in touch with you within a few days. Thank you for contacting us!"
+      );
+    } catch (error) {
+      setErrorMessage("Failed to sent message. Please try again later.");
+    }
+  };
+
   return (
     <Box
       sx={{
@@ -65,6 +98,8 @@ const ContactForm = () => {
           <TextField
             type="text"
             label="Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
             sx={{
               width: "25rem",
               "& label": { color: "#FFF" },
@@ -85,6 +120,8 @@ const ContactForm = () => {
           <TextField
             type="email"
             label="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             sx={{
               width: "25rem",
               "& label": { color: "#FFF" },
@@ -105,6 +142,8 @@ const ContactForm = () => {
           <TextField
             type="text"
             label="Phone number"
+            value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}
             sx={{
               width: "25rem",
               "& label": { color: "#FFF" },
@@ -127,6 +166,8 @@ const ContactForm = () => {
             label="Write your message here.."
             multiline
             rows={4}
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
             sx={{
               width: "25rem",
               "& label": { color: "#FFF" },
@@ -145,6 +186,7 @@ const ContactForm = () => {
             }}
           />
           <Button
+            onClick={sendMessage}
             sx={{
               color: "#FFF",
               border: "1px solid transparent",
@@ -153,6 +195,15 @@ const ContactForm = () => {
           >
             Submit
           </Button>
+          {isSuccessfull ? (
+            <Typography sx={{ color: "green", fontSize: "1.2rem" }}>
+              {errorMessage}
+            </Typography>
+          ) : (
+            <Typography sx={{ color: "red", fontSize: "1.2rem" }}>
+              {errorMessage}
+            </Typography>
+          )}
         </Box>
       </Box>
     </Box>
