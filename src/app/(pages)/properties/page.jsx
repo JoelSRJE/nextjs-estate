@@ -186,7 +186,11 @@ const Properties = () => {
             </Box>
           ))
         ) : (
-          <Box>No results found...</Box>
+          <Box>
+            <Typography sx={{ color: "#FFF", fontSize: "1.5rem" }}>
+              No results found...
+            </Typography>
+          </Box>
         )}
       </Box>
       <Box>
