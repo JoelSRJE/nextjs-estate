@@ -2,8 +2,8 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## TODO
 
-Make responsive
-Install Framer and animate certain areas
+Make responsive <br/>
+Install Framer and animate certain areas.
 
 ## Getting Started
 
