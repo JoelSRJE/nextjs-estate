@@ -85,6 +85,7 @@ const ContactForm = () => {
           />
         </Box>
         {/* Right side - contact form */}
+
         <Box
           sx={{
             display: "flex",
@@ -109,7 +110,7 @@ const ContactForm = () => {
                   borderColor: "#FFF",
                 },
                 "&:hover fieldset": {
-                  borderColor: "rgba(41, 73, 128, 0.8)",
+                  borderColor: "rgba(217, 131, 36, 0.8)",
                 },
                 "&.Mui-focused fieldset": {
                   borderColor: "#FFF",
@@ -131,7 +132,7 @@ const ContactForm = () => {
                   borderColor: "#FFF",
                 },
                 "&:hover fieldset": {
-                  borderColor: "rgba(41, 73, 128, 0.8)",
+                  borderColor: "rgba(217, 131, 36, 0.8)",
                 },
                 "&.Mui-focused fieldset": {
                   borderColor: "#FFF",
@@ -153,7 +154,7 @@ const ContactForm = () => {
                   borderColor: "#FFF",
                 },
                 "&:hover fieldset": {
-                  borderColor: "rgba(41, 73, 128, 0.8)",
+                  borderColor: "rgba(217, 131, 36, 0.8)",
                 },
                 "&.Mui-focused fieldset": {
                   borderColor: "#FFF",
@@ -177,7 +178,7 @@ const ContactForm = () => {
                   borderColor: "#FFF",
                 },
                 "&:hover fieldset": {
-                  borderColor: "rgba(41, 73, 128, 0.8)",
+                  borderColor: "rgba(217, 131, 36, 0.8)",
                 },
                 "&.Mui-focused fieldset": {
                   borderColor: "#FFF",
